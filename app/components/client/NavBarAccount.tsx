@@ -14,7 +14,11 @@ const NavBarAccount = () => {
   return (
     <Fragment>
       <div className="navbar-end gap-2">
-        {!user ? <AccountButtons /> : <ProfileButtons />}
+        {!user ? (
+          <AccountButtons />
+        ) : (
+          <ProfileButtons profilePhotoURL={user.profilePicture} />
+        )}
       </div>
     </Fragment>
   );
