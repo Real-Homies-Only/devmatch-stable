@@ -8,7 +8,7 @@ const Logo = () => {
     <div className="navbar-start">
       <span
         onClick={() => router.push("/")}
-        className="btn btn-ghost btn-sm text-xl text-primary"
+        className="btn btn-ghost btn-sm text-xl text-primary hover:text-secondary hover:text-2xl"
       >
         DM
       </span>

@@ -20,7 +20,9 @@ const RegisterFormSchema = z
     confirmPassword: z
       .string()
       .min(6, "Password should be at least 6 characters"),
-    userType: z.enum(["Developer", "Client"])
+    userType: z.enum(["Developer", "Client"], {
+      message: "Please select a user type"
+    })
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -98,7 +100,7 @@ const RegisterForm = () => {
             />
           </label>
           {errors.lastName && (
-            <span className="text-letter">
+            <span className="text-letter mt-1">
               {String(errors.lastName.message)}
             </span>
           )}
@@ -130,7 +132,7 @@ const RegisterForm = () => {
             />
           </label>
           {errors.password && (
-            <span className="text-letter">
+            <span className="text-letter mt-1">
               {String(errors.password.message)}
             </span>
           )}
@@ -148,7 +150,7 @@ const RegisterForm = () => {
             />
           </label>
           {errors.confirmPassword && (
-            <span className="text-letter">
+            <span className="text-letter mt-1">
               {String(errors.confirmPassword.message)}
             </span>
           )}
@@ -165,7 +167,7 @@ const RegisterForm = () => {
             <option>Client</option>
           </select>
           {errors.userType && (
-            <span className="text-letter">
+            <span className="text-letter mt-2">
               {String(errors.userType.message)}
             </span>
           )}

@@ -8,13 +8,21 @@ const NavBarAccount = () => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <span className="loading loading-spinner loading-xs"></span>;
+    return (
+      <div className="navbar-end mr-4">
+        <span className=" loading loading-spinner loading-md"></span>
+      </div>
+    );
   }
 
   return (
     <Fragment>
       <div className="navbar-end gap-2">
-        {!user ? <AccountButtons /> : <ProfileButtons />}
+        {!user ? (
+          <AccountButtons />
+        ) : (
+          <ProfileButtons profilePhotoURL={user.profilePicture} />
+        )}
       </div>
     </Fragment>
   );

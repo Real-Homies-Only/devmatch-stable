@@ -62,7 +62,7 @@ const LoginForm = () => {
             />
           </label>
           {errors.email && (
-            <span className="text-letter mb-2">
+            <span className="text-letter mb-2 mt-1">
               {String(errors.email.message)}
             </span>
           )}
@@ -81,14 +81,14 @@ const LoginForm = () => {
             />
           </label>
           {errors.password && (
-            <span className="text-letter mb-2">
+            <span className="text-letter mb-2 mt-1">
               {String(errors.password.message)}
             </span>
           )}
         </div>
 
         {errorMessage && (
-          <div>
+          <div className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
