@@ -8,9 +8,7 @@ const page = () => {
     <div>
       <AuthProvider>
         <NavBar />
-        <div className="flex flex-1 h-screen justify-center">
-          <ProfileCard />
-        </div>
+        <ProfileCard />
       </AuthProvider>
     </div>
   );
