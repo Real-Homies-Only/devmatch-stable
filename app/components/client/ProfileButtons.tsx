@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AuthContext } from "@/app/context/AuthContext";
 import Icon from "@mdi/react";
 import { mdiAccount, mdiDoorOpen } from "@mdi/js";
+import { Body } from "@/app/fonts/roboto";
 
 interface ProfileButtonsProps {
   profilePhotoURL: string;
@@ -20,8 +21,11 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
         role="button"
         className="btn btn-ghost avatar dropdown dropdown-end"
       >
-        <div className="w-10 ring ring-primary rounded-full mt-1">
+        <div
+          className={`${Body.className} w-10 border-primary border rounded-full mt-1 shadow-md hover:border-secondary hover:border-2`}
+        >
           <Image
+            className=""
             src={profilePhotoURL}
             alt="Profile Picture"
             width={480}
@@ -31,10 +35,13 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
 
         <ul
           tabIndex={0}
-          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 py-6 gap-4"
+          className={`${Body.className} dropdown-content justify-center z-[1] menu p-2 shadow-lg mt-1 border border-primary bg-base-100 rounded-box w-52 py-6 gap-4 `}
         >
           <li>
-            <div onClick={() => router.push("/profile")}>
+            <div
+              onClick={() => router.push("/profile")}
+              className="hover:bg-gray-100"
+            >
               <a className="flex flex-row">
                 <Icon path={mdiAccount} size={1} className="mr-2" />
                 <span>Profile</span>
@@ -42,7 +49,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
             </div>
           </li>
           <li>
-            <div onClick={logout}>
+            <div onClick={logout} className="hover:bg-gray-100">
               <a className="flex flex-row">
                 <Icon path={mdiDoorOpen} size={1} className="mr-2" />
                 <span>Sign Out</span>
