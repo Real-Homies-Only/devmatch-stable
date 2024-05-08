@@ -4,6 +4,7 @@ export const UserSchema = z.object({
   id: z.string(),
   firstName: z.string(),
   lastName: z.string(),
+  username: z.string(),
   profilePicture: z.string(),
   bio: z.string(),
   location: z.string(),
@@ -17,6 +18,7 @@ export interface UserInterface {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   profilePicture: string;
   bio: string;
   location: string;

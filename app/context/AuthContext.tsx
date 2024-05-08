@@ -7,17 +7,18 @@ import {
   createUserWithEmailAndPassword
 } from "firebase/auth";
 
-import { UserType } from "../utils/UserProps";
+import { UserInterface } from "../utils/UserProps";
 import { auth } from "../utils/firebaseConfig";
 
 interface AuthContextValue {
-  user: UserType | null;
+  user: UserInterface | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<boolean>;
   signUp: (
     firstname: string,
     lastName: string,
+    username: string,
     userType: string,
     email: string,
     password: string
@@ -39,7 +40,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<UserInterface | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           id: currentUser.uid,
           firstName: user.firstName,
           lastName: user.lastName,
+          username: user.username,
           profilePicture: user.profilePicture,
           bio: user.bio,
           location: user.location,
@@ -98,12 +100,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signUp = async (
     firstName: string,
     lastName: string,
+    username: string,
     userType: string,
     email: string,
     password: string
   ): Promise<boolean> => {
     try {
-      console.log(firstName, lastName, userType, email, password);
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -117,6 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         id: user.uid,
         firstName: firstName,
         lastName: lastName,
+        username: username,
         userType: userType
       };
 

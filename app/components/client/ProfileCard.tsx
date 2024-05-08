@@ -6,7 +6,7 @@ import Image from "next/image";
 import UploadPhotoModal from "./UploadPhotoModal";
 import { AuthContext } from "@/app/context/AuthContext";
 import { Body } from "@/app/fonts/roboto";
-import { mdiFloppy, mdiPencil } from "@mdi/js";
+import { mdiPencil } from "@mdi/js";
 import EditProfile from "./EditProfile";
 
 const ProfileCard = () => {
@@ -89,21 +89,22 @@ const ProfileCard = () => {
               </span>
             </div>
             <div className="self-center text-letter text-center">
-              <div className="text-2xl">
-                {user.firstName} {user.lastName}
+              <div className="text-2xl flex flex-col">
+                <div>
+                  {user.firstName} {user.lastName}
+                </div>
+                <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>
               {isEditing ? (
                 <Fragment>
-                  <div
-                    onClick={() => setIsEditing(!isEditing)}
-                    className="btn btn-ghost text-letter text-md flex flex-row gap-2"
-                  >
-                    <div>
-                      <Icon path={mdiFloppy} size={1} />
-                    </div>
-                    <div>Save</div>
+                  <div className="mt-4 mx-4">
+                    <EditProfile
+                      id={user.id}
+                      isEditing={handleToggle}
+                      currentBio={user.bio}
+                      location={user.location}
+                    />
                   </div>
-                  <EditProfile id={user.id} isEditing={handleToggle} />
                 </Fragment>
               ) : (
                 <Fragment>

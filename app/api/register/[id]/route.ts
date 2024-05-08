@@ -14,13 +14,14 @@ export async function POST(
     if (!params.id) {
       throw new Error("ID params not found!");
     } else {
-      const { firstName, lastName, userType } = await req.json();
+      const { firstName, lastName, userType, username } = await req.json();
       const idString = params.id;
 
       const data = {
         id: idString,
         firstName: firstName,
         lastName: lastName,
+        username: username,
         userType: userType
       };
 
@@ -28,6 +29,7 @@ export async function POST(
         id: z.string(),
         firstName: z.string(),
         lastName: z.string(),
+        username: z.string(),
         userType: z.string()
       });
 
@@ -38,6 +40,7 @@ export async function POST(
           id: idString,
           firstName: firstName,
           lastName: lastName,
+          username: username,
           userType: userType
         }
       });
