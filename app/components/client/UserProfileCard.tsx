@@ -12,11 +12,11 @@ const UserProfileCard: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!params.id) {
+      if (!params.username) {
         setUser(null);
       } else {
-        const idString = params.id;
-        const response = await fetch(`/api/user/${idString}`, {
+        const userString = params.username;
+        const response = await fetch(`/api/profile/${userString}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" }
         });
@@ -26,6 +26,7 @@ const UserProfileCard: React.FC = () => {
           id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
+          username: user.username,
           profilePicture: user.profilePicture,
           bio: user.bio,
           location: user.location,
@@ -73,8 +74,11 @@ const UserProfileCard: React.FC = () => {
               </div>
             </div>
             <div className="self-center text-letter text-center">
-              <div className="text-2xl mb-4">
-                {user.firstName} {user.lastName}
+              <div className="text-2xl flex flex-col">
+                <div>
+                  {user.firstName} {user.lastName}
+                </div>
+                <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>
               <div className="mb-2">{user.bio}</div>
               <div className="text-gray-500">Location: {user.location}</div>

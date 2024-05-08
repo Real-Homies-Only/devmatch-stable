@@ -4,7 +4,9 @@ import { UserType } from "./UserProps";
 
 const prisma = new PrismaClient();
 
-export const getUserData = async (id: string): Promise<UserType | null> => {
+export const getUserDataWithId = async (
+  id: string
+): Promise<UserType | null> => {
   if (!id) {
     throw new Error("ID params not found!");
   } else {

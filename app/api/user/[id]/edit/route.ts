@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import crypto from "crypto";
 import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
-import { getUserData } from "@/app/utils/getUserData";
+import { getUserDataWithId } from "@/app/utils/getUserDataWithId";
 
 const bucketName = process.env.BUCKET_NAME || "";
 const bucketRegion = process.env.BUCKET_REGION || "";
@@ -65,7 +65,7 @@ export async function PATCH(
       const uploadToBucket = new PutObjectCommand(bucketParams);
       bucket.send(uploadToBucket);
 
-      const user = getUserData(params.id);
+      const user = getUserDataWithId(params.id);
 
       return NextResponse.json({ user }, { status: 202 });
     } else if (photo instanceof Blob) {
@@ -90,7 +90,7 @@ export async function PATCH(
 
       await prisma.$disconnect;
 
-      const user = getUserData(params.id);
+      const user = getUserDataWithId(params.id);
 
       return NextResponse.json({ user }, { status: 202 });
     } else {

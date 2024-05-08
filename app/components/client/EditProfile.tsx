@@ -20,10 +20,17 @@ type ProfileForm = z.infer<typeof ProfileFormSchema>;
 
 interface EditProfileProps {
   id: string;
+  currentBio: string;
+  location: string;
   isEditing: (value: boolean) => void;
 }
 
-const EditProfile: React.FC<EditProfileProps> = ({ id, isEditing }) => {
+const EditProfile: React.FC<EditProfileProps> = ({
+  id,
+  currentBio,
+  location,
+  isEditing
+}) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEditingForm, setIsEditingForm] = useState(true);
 
@@ -59,10 +66,12 @@ const EditProfile: React.FC<EditProfileProps> = ({ id, isEditing }) => {
     >
       <div className="gap-1 flex flex-col">
         <textarea
-          className="textarea textarea-bordered textarea-primary w-96"
+          className="textarea textarea-bordered textarea-primary w-full"
           placeholder="Bio"
           {...register("bio")}
-        ></textarea>
+        >
+          {currentBio}
+        </textarea>
 
         {errors.bio && (
           <span className="text-letter mb-2 mt-1">
@@ -75,9 +84,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ id, isEditing }) => {
           className="select select-primary w-full max-w-xs"
           {...register("location")}
         >
-          <option disabled selected>
-            Location
-          </option>
+          {location === "None" ? (
+            <option disabled selected>
+              Location
+            </option>
+          ) : (
+            <option value={location}>{location}</option>
+          )}
           {countryList.map((country) => (
             <option key={country} value={country}>
               {country}

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
 
-import { mdiGoogle } from "@mdi/js";
+import { mdiGoogle, mdiArrowLeft } from "@mdi/js";
 import { AuthContext } from "@/app/context/AuthContext";
 import { Headings } from "@/app/fonts/roboto";
 import { Body } from "@/app/fonts/roboto";
@@ -45,7 +45,16 @@ const LoginForm = () => {
 
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
-      <div className={`${Headings.className} text-xl mb-4`}>Join DevMatch</div>
+      <div
+        className={`${Body.className} flex flex-col gap-2 hover:bg-gray-300`}
+        onClick={() => router.back()}
+      >
+        <Icon path={mdiArrowLeft} size={1} />
+        <span>Back</span>
+      </div>
+      <div className={`${Headings.className} text-xl mb-4 self-center`}>
+        Join DevMatch
+      </div>
       <form
         onSubmit={handleSubmit(handleLogin)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}

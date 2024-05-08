@@ -15,6 +15,10 @@ const RegisterFormSchema = z
   .object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
+    username: z
+      .string()
+      .min(4, "Username should be more than 4 characters")
+      .max(14, "Username should be less than 14 characters"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password should be at least 6 characters"),
     confirmPassword: z
@@ -43,11 +47,13 @@ const RegisterForm = () => {
   } = useForm<RegisterForm>({ resolver: zodResolver(RegisterFormSchema) });
 
   const handleRegister = async (registerData: RegisterForm) => {
-    const { firstName, lastName, email, password, userType } = registerData;
+    const { firstName, lastName, username, email, password, userType } =
+      registerData;
     try {
       const result = await signUp(
         firstName,
         lastName,
+        username,
         userType,
         email,
         password
@@ -102,6 +108,24 @@ const RegisterForm = () => {
           {errors.lastName && (
             <span className="text-letter mt-1">
               {String(errors.lastName.message)}
+            </span>
+          )}
+        </div>
+        <div className="gap-1">
+          <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
+            <span className="border-r border-primary pr-2 text-sm">
+              Username
+            </span>
+            <input
+              type="text"
+              className="grow"
+              placeholder="aj.aparicio36"
+              {...register("username")}
+            />
+          </label>
+          {errors.username && (
+            <span className="text-letter mt-1">
+              {String(errors.username.message)}
             </span>
           )}
         </div>
@@ -173,7 +197,7 @@ const RegisterForm = () => {
           )}
         </div>
         {errorMessage && (
-          <div>
+          <div className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
