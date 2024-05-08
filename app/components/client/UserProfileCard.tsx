@@ -81,7 +81,12 @@ const UserProfileCard: React.FC = () => {
                 <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>
               <div className="mb-2">{user.bio}</div>
-              <div className="text-gray-500">Location: {user.location}</div>
+              <div className="text-gray-500 gap-2 flex flex-row items-center justify-center">
+                <span>{user.location}</span>
+                <span className=" text-xs text-primary font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
+                  Location
+                </span>
+              </div>
             </div>
           </div>
         </div>
