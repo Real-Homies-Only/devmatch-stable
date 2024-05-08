@@ -1,9 +1,9 @@
 import { prisma } from "@/app/utils/prisma";
-import { UserSchema } from "@/app/utils/UserProps";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataWithId } from "@/app/utils/getUserDataWithId";
 
 export async function GET(
-  req: NextResponse,
+  req: NextRequest,
   {
     params
   }: {
@@ -15,10 +15,12 @@ export async function GET(
       throw new Error("ID params not found!");
     } else {
       const idString = params.id;
-
-      return NextResponse.json({ id: idString }, { status: 200 });
+      const user = await getUserDataWithId(idString);
+      return NextResponse.json({ user }, { status: 200 });
     }
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 404 });
+    return NextResponse.json({ user: null }, { status: 404 });
+  } finally {
+    await prisma.$disconnect();
   }
 }

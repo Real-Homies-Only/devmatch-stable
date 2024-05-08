@@ -21,6 +21,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.4",
+    "react-modal": "^3.16.1",
     "sharp": "^0.33.3",
     "zod": "^3.23.6"
   },

@@ -17,9 +17,10 @@ model Users {
   id             String  @id @unique
   firstName      String
   lastName       String
+  username       String  @unique @default(cuid()) @db.VarChar(14)
   userType       String
   location       String  @default("None")
-  bio            String  @default("User has no info")
+  bio            String  @default("User has no info") @db.VarChar(255)
   profilePicture String  @default("defaultPhoto.png")
   isAdmin        Boolean @default(false)
 }
