@@ -100,6 +100,8 @@ export async function PATCH(
   } catch (error) {
     console.error("Error uploading photo:", error);
     return NextResponse.json({ status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -129,5 +131,7 @@ export async function PUT(
     return NextResponse.json({ status: 201 });
   } catch (err) {
     return NextResponse.json({ status: 401 });
+  } finally {
+    await prisma.$disconnect();
   }
 }
