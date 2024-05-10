@@ -16,9 +16,11 @@ export async function GET(
     } else {
       const idString = params.id;
       const user = await getUserDataWithId(idString);
+      await prisma.$disconnect();
       return NextResponse.json({ user }, { status: 200 });
     }
   } catch (err) {
+    await prisma.$disconnect();
     return NextResponse.json({ user: null }, { status: 404 });
   } finally {
     await prisma.$disconnect();

@@ -2,17 +2,20 @@
 import React, { Fragment, useContext, useState } from "react";
 import Icon from "@mdi/react";
 import Image from "next/image";
+import Modal from "react-modal";
 
 import UploadPhotoModal from "./UploadPhotoModal";
 import { AuthContext } from "@/app/context/AuthContext";
-import { Body } from "@/app/fonts/roboto";
+import { Body, Headings } from "@/app/fonts/roboto";
 import { mdiPencil } from "@mdi/js";
 import EditProfile from "./EditProfile";
 
 const ProfileCard = () => {
   const { user, loading } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [edited, setEdited] = useState(false);
 
   const handleChangePicture = async (photo: File | null) => {
     try {
@@ -32,7 +35,10 @@ const ProfileCard = () => {
       });
 
       if (response.ok) {
-        window.location.reload();
+        setUploaded(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
         throw new Error();
       }
@@ -45,10 +51,16 @@ const ProfileCard = () => {
     setIsEditing(!value);
   };
 
+  const handleEdited = (value: boolean) => {
+    setEdited(value);
+  };
+
   if (loading) {
     return (
-      <div className="artboard phone-6 shadow-md flex items-center justify-center">
-        <span className="loading loading-spinner loading-xs"></span>
+      <div className="flex flex-col w-full items-center">
+        <div className="artboard phone-1 artboard-horizontal w-full mx-4 lg:mx-12 mt-4 self-center flex flex-1 items-center justify-center">
+          <span className="loading loading-spinner loading-lg self-center justify-center"></span>
+        </div>
       </div>
     );
   }
@@ -56,7 +68,7 @@ const ProfileCard = () => {
   return (
     <Fragment>
       {user ? (
-        <div className="flex ">
+        <div className="flex">
           <div
             className={`${Body.className} artboard rounded-xl gap-2 border-letter border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 shadow-md`}
           >
@@ -86,13 +98,44 @@ const ProfileCard = () => {
                   onClose={() => setIsModalOpen(false)}
                   onUpload={handleChangePicture}
                 />
+                <Modal
+                  isOpen={uploaded}
+                  contentLabel="Loading..."
+                  className="fixed inset-0 z-50 flex items-center justify-center"
+                  overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+                >
+                  <div
+                    className={`flex flex-col gap-4 items-center ${Headings.className}`}
+                  >
+                    <span className="text-xl text-primary">
+                      Photo uploaded! Refreshing...
+                    </span>
+                    <span className="loading loading-spinner text-primary loading-lg" />
+                  </div>
+                </Modal>
+                <Modal
+                  isOpen={edited}
+                  contentLabel="Loading..."
+                  className="fixed inset-0 z-50 flex items-center justify-center"
+                  overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+                >
+                  <div
+                    className={`flex flex-col gap-4 items-center ${Headings.className}`}
+                  >
+                    <span className="text-xl text-primary">
+                      Bio updated! Refreshing...
+                    </span>
+                    <span className="loading loading-spinner text-primary loading-lg" />
+                  </div>
+                </Modal>
               </span>
             </div>
             <div className="self-center text-letter text-center">
-              <div className="text-2xl flex flex-col">
-                <div>
+              <div className="flex flex-col">
+                <div className="text-2xl ">
                   {user.firstName} {user.lastName}
                 </div>
+                <div className="text-letter text-md">{user.userType}</div>
                 <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>
               {isEditing ? (
@@ -101,6 +144,7 @@ const ProfileCard = () => {
                     <EditProfile
                       id={user.id}
                       isEditing={handleToggle}
+                      edited={handleEdited}
                       currentBio={user.bio}
                       location={user.location}
                     />
@@ -120,7 +164,7 @@ const ProfileCard = () => {
                   <div className="mb-2">{user.bio}</div>
                   <div className="text-gray-500 gap-2 flex flex-row items-center justify-center">
                     <span>{user.location}</span>
-                    <span className=" text-xs text-primary font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
+                    <span className=" text-xs text-accent font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
                       Location
                     </span>
                   </div>
