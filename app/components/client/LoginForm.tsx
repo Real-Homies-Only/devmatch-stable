@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
+import Modal from "react-modal";
 
 import { mdiGoogle, mdiArrowLeft } from "@mdi/js";
 import { AuthContext } from "@/app/context/AuthContext";
@@ -21,7 +22,8 @@ type LoginForm = z.infer<typeof LoginFormSchema>;
 
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { login } = useContext(AuthContext);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const { login, loading, user } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
@@ -34,7 +36,10 @@ const LoginForm = () => {
     try {
       const result = await login(email, password);
       if (result === true) {
-        router.push("/");
+        setLoggedIn(true);
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       } else {
         throw new Error();
       }
@@ -43,8 +48,36 @@ const LoginForm = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col w-full items-center">
+        <span className="loading loading-lg text-primary" />
+      </div>
+    );
+  }
+
+  if (user) {
+    router.back();
+    return <div></div>;
+  }
+
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
+      <Modal
+        isOpen={loggedIn}
+        contentLabel="Loading..."
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+      >
+        <div
+          className={`flex flex-col gap-4 items-center ${Headings.className}`}
+        >
+          <span className="text-xl text-primary">
+            Logged in! Redirecting...
+          </span>
+          <span className="loading loading-spinner text-primary loading-lg" />
+        </div>
+      </Modal>
       <div
         className={`${Body.className} flex flex-col gap-2 hover:bg-gray-300`}
         onClick={() => router.back()}
