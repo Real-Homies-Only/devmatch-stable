@@ -21,10 +21,10 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
       <div
         tabIndex={0}
         role="button"
-        className="btn btn-ghost avatar dropdown dropdown-end"
+        className="btn btn-ghost avatar dropdown dropdown-end z-10"
       >
         <div
-          className={`${Body.className} w-10 border-primary border rounded-full mt-1 shadow-md hover:border-secondary hover:border-2`}
+          className={`${Body.className} w-10 border-primary border z-10 rounded-full mt-1 shadow-md hover:border-secondary hover:border-2`}
         >
           <Image
             className=""
@@ -37,7 +37,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
 
         <ul
           tabIndex={0}
-          className={`${Body.className} dropdown-content justify-center z-[1] menu p-2 shadow-lg mt-1 border border-primary bg-base-100 rounded-box w-52 py-6 gap-4 `}
+          className={`${Body.className} dropdown-content justify-center z-10 menu p-2 shadow-lg mt-1 border border-primary bg-base-100 rounded-box w-52 py-6 gap-4 `}
         >
           <li>
             <div

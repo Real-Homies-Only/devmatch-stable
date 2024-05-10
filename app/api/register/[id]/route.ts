@@ -17,14 +17,6 @@ export async function POST(
       const { firstName, lastName, userType, username } = await req.json();
       const idString = params.id;
 
-      const data = {
-        id: idString,
-        firstName: firstName,
-        lastName: lastName,
-        username: username,
-        userType: userType
-      };
-
       const RegisteredUserSchema = z.object({
         id: z.string(),
         firstName: z.string(),
@@ -32,6 +24,16 @@ export async function POST(
         username: z.string(),
         userType: z.string()
       });
+
+      type RegisteredUserSchema = z.infer<typeof RegisteredUserSchema>;
+
+      const data: RegisteredUserSchema = {
+        id: idString,
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        userType: userType
+      };
 
       RegisteredUserSchema.parse(data);
 

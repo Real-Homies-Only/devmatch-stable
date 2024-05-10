@@ -10,9 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "primary": "#32D8C5",
-        "secondary": "#8FCAEA",
-        "accent": "#67A6E2",
+        "primary": "#1a97f2",
+        "secondary": "#084599",
+        "accent": "#85d014",
         "background": "#FAFEFE",
         "letter": "#020B0A"
       }
@@ -23,9 +23,9 @@ const config: Config = {
     themes: [
       {
         "light": {
-          primary: "#32D8C5",
-          secondary: "#8FCAEA",
-          accent: "#67A6E2",
+          primary: "#1a97f2",
+          secondary: "#084599",
+          accent: "#85d014",
           background: "#FAFEFE",
           letter: "#020B0A",
           gray: "#4A4A4A"
