@@ -13,7 +13,7 @@ const Hero = () => {
         alt="Background Image"
         layout="fill"
         objectFit="cover"
-        className="w-full self-center"
+        className="w-full self-center shadow-lg"
         quality={100}
       />
       <div className="hero-overlay bg-opacity-60"></div>
