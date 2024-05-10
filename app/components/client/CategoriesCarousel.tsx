@@ -12,13 +12,13 @@ import React from "react";
 
 const CategoriesCarousel = () => {
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 my-8">
       <div className={`${Headings.className} text-xl`}>
         {" "}
-        Browse by categories{" "}
+        Find a developer specializing in or clients finding developers for...{" "}
       </div>
-      <div className="carousel gap-4 lg:items-center lg:justify-center">
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+      <div className="carousel gap-8 lg:items-center pb-4">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon path={mdiWeb} size={7} className="text-gray-400 opacity-30" />
           </div>
@@ -27,7 +27,7 @@ const CategoriesCarousel = () => {
             Web Application{" "}
           </span>
         </div>
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon
               path={mdiCellphone}
@@ -40,7 +40,7 @@ const CategoriesCarousel = () => {
             Mobile Application{" "}
           </span>
         </div>
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon
               path={mdiChartBar}
@@ -52,7 +52,7 @@ const CategoriesCarousel = () => {
             Data Science
           </span>
         </div>
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon
               path={mdiGamepad}
@@ -65,7 +65,7 @@ const CategoriesCarousel = () => {
             Game Development{" "}
           </span>
         </div>
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon
               path={mdiCubeOutline}
@@ -78,7 +78,7 @@ const CategoriesCarousel = () => {
             Computer Aided Design{" "}
           </span>
         </div>
-        <div className="carousel-item artboard h-96 w-64 border border-gray-300 shadow-sm rounded-lg px-4 items-center justify-center relative">
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <Icon
               path={mdiStore}
@@ -89,6 +89,12 @@ const CategoriesCarousel = () => {
           <span className={`${Headings.className} text-2xl z-10`}>
             {" "}
             E-Commerce{" "}
+          </span>
+        </div>
+        <div className="carousel-item artboard shadow-lg h-96 w-64 border border-gray-300  rounded-lg px-4 items-center justify-center relative">
+          <span className={`${Headings.className} text-2xl z-10`}>
+            {" "}
+            ...and more!{" "}
           </span>
         </div>
       </div>

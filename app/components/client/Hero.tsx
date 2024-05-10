@@ -12,8 +12,7 @@ const Hero = () => {
         src="/images/hero-bg2.jpg"
         alt="Background Image"
         layout="fill"
-        objectFit="cover"
-        className="w-full self-center shadow-lg"
+        className="w-full self-center shadow-lg lg:object-cover"
         quality={100}
       />
       <div className="hero-overlay bg-opacity-60"></div>

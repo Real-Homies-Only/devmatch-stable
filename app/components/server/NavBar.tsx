@@ -7,7 +7,7 @@ const NavBar = () => {
   return (
     <Fragment>
       <AuthProvider>
-        <div className="navbar bg-background shadow-xl border-b border-gray-300">
+        <div className="navbar bg-background shadow-sm border-b border-gray-300">
           <Logo />
           <NavBarAccount />
         </div>

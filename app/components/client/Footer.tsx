@@ -1,27 +1,25 @@
-import {
-  mdiFacebook,
-  mdiTwitter,
-  mdiVideoInputHdmi,
-  mdiYoutube
-} from "@mdi/js";
+import { Body } from "@/app/fonts/roboto";
+import { mdiFacebook, mdiTwitter, mdiYoutube } from "@mdi/js";
 import Icon from "@mdi/react";
+import Image from "next/image";
 import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="footer p-10 text-gray-100 bg-gray-700">
-      <aside className="flex flex-col gap-2 items-start justify-start">
-        <a>
-          <Icon path={mdiVideoInputHdmi} size={3} />
-        </a>
-        <p>
-          DM
-          <br />
-          Matching visions with creators
-        </p>
+    <footer
+      className={`${Body.className} footer p-10 text-gray-100 bg-gray-700 flex flex-col items-center lg:grid`}
+    >
+      <aside className="flex flex-col gap-2 items-center lg:mb-6">
+        <Image
+          src="/images/logo-grayscale.png"
+          alt="Logo with Text"
+          width={150}
+          height={40}
+        />
+        <p>Matching visions with creators</p>
       </aside>
-      <nav>
-        <h6 className="footer-title">Social</h6>
+      <nav className="flex flex-col items-center lg:flex-row lg:justify-center">
+        <h6 className="footer-title lg:mr-4">Social</h6>
         <div className="grid grid-flow-col gap-4">
           <a>
             <Icon path={mdiTwitter} size={1.2} />

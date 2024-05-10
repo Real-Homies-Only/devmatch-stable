@@ -43,12 +43,14 @@ const UserProfileCard: React.FC = () => {
       setLoading(false);
     };
     fetchUser();
-  });
+  }, [params.username, loading]);
 
   if (loading) {
     return (
-      <div className="artboard phone-6 shadow-md flex items-center justify-center">
-        <span className="loading loading-spinner loading-xs"></span>
+      <div className="flex flex-col w-full items-center">
+        <div className="artboard phone-1 artboard-horizontal w-full mx-4 lg:mx-12 mt-4 self-center flex flex-1 items-center justify-center">
+          <span className="loading loading-spinner loading-lg self-center justify-center"></span>
+        </div>
       </div>
     );
   }
@@ -74,16 +76,17 @@ const UserProfileCard: React.FC = () => {
               </div>
             </div>
             <div className="self-center text-letter text-center">
-              <div className="text-2xl flex flex-col">
-                <div>
+              <div className="flex flex-col mb-2">
+                <div className="text-2xl ">
                   {user.firstName} {user.lastName}
                 </div>
+                <div className="text-letter text-md">{user.userType}</div>
                 <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>
               <div className="mb-2">{user.bio}</div>
               <div className="text-gray-500 gap-2 flex flex-row items-center justify-center">
                 <span>{user.location}</span>
-                <span className=" text-xs text-primary font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
+                <span className=" text-xs text-accent font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
                   Location
                 </span>
               </div>
