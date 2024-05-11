@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "@/app/context/AuthContext";
+import Modal from "react-modal";
 
 import { mdiGoogle } from "@mdi/js";
 import { Headings } from "@/app/fonts/roboto";
@@ -37,7 +38,8 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { signUp } = useContext(AuthContext);
+  const [registered, setRegistered] = useState<boolean>(false);
+  const { signUp, loading, user } = useContext(AuthContext);
   const router = useRouter();
 
   const {
@@ -59,7 +61,10 @@ const RegisterForm = () => {
         password
       );
       if (result === true) {
-        router.push("/");
+        setRegistered(true);
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       } else {
         throw new Error();
       }
@@ -68,9 +73,37 @@ const RegisterForm = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col w-full items-center">
+        <span className="loading loading-lg text-primary" />
+      </div>
+    );
+  }
+
+  if (user) {
+    router.back();
+    return <div></div>;
+  }
+
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
       <div className={`${Headings.className} text-xl mb-4`}>Join DevMatch</div>
+      <Modal
+        isOpen={registered}
+        contentLabel="Loading..."
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+      >
+        <div
+          className={`flex flex-col gap-4 items-center ${Headings.className}`}
+        >
+          <span className="text-xl text-primary">
+            Registered user! Redirecting to home page...
+          </span>
+          <span className="loading loading-spinner text-primary loading-lg" />
+        </div>
+      </Modal>
       <form
         onSubmit={handleSubmit(handleRegister)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
