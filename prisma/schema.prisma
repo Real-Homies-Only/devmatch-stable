@@ -23,4 +23,27 @@ model Users {
   bio            String  @default("User has no info") @db.VarChar(255)
   profilePicture String  @default("defaultPhoto.png")
   isAdmin        Boolean @default(false)
+  projects       Project[]   
+  participatedProjects ProjectParticipant[] 
+}
+
+model Project {
+  id                Int   @id @unique @default(autoincrement())
+  projectName       String
+  category          String
+  projectManagement String
+  position          String
+  language          String
+  description       String
+  userId            String        
+  user              Users    @relation(fields: [userId], references: [id])
+  participants      ProjectParticipant[] 
+}
+
+model ProjectParticipant {
+  id        String        @id @unique
+  projectId Int          
+  userId    String
+  user      Users         @relation(fields: [userId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
 }

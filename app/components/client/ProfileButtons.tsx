@@ -52,7 +52,10 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
           </li>
           {user && user.userType === "Client" && (
             <li>
-              <div>
+              <div
+                onClick={() => router.push("/projectTable")}
+                className="hover:bg-gray-100"
+              >
                 <a className="flex flex-row">
                   <Icon path={mdiPencil} size={1} className="mr-2" />
                   <span>Create Project</span>
