@@ -81,8 +81,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      return true;
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch(`/api/user/${user.uid}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+      const database = await response.json();
+      if (!user) {
+        throw new Error();
+      } else if (user && !database.user) {
+        throw new Error();
+      } else {
+        return true;
+      }
     } catch (err) {
       return false;
     }
@@ -111,8 +122,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
         password
       );
-      if (!user) {
-        throw new Error("User not registered!");
+
+      const existingUser = await fetch(`/api/user/${user.uid}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+      const database = await existingUser.json();
+
+      if (user && database.user) {
+        throw new Error("User already registered!");
       }
 
       const data = {
