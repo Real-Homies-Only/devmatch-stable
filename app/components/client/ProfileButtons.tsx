@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AuthContext } from "@/app/context/AuthContext";
 import Icon from "@mdi/react";
-import { mdiAccount, mdiDoorOpen } from "@mdi/js";
+import { mdiAccount, mdiDoorOpen, mdiPencil } from "@mdi/js";
 import { Body } from "@/app/fonts/roboto";
 
 interface ProfileButtonsProps {
@@ -13,6 +13,8 @@ interface ProfileButtonsProps {
 
 const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
   const { logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+
   const router = useRouter();
   return (
     <Fragment>
@@ -48,6 +50,19 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
               </a>
             </div>
           </li>
+          {user && user.userType === "Client" && (
+            <li>
+              <div
+                onClick={() => router.push("/project")}
+                className="hover:bg-gray-100"
+              >
+                <a className="flex flex-row">
+                  <Icon path={mdiPencil} size={1} className="mr-2" />
+                  <span>Create Project</span>
+                </a>
+              </div>
+            </li>
+          )}
           <li>
             <div onClick={logout} className="hover:bg-gray-100">
               <a className="flex flex-row">
