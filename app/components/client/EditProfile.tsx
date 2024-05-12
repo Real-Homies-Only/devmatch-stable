@@ -80,13 +80,18 @@ const EditProfile: React.FC<EditProfileProps> = ({
         className={`${Body.className} self-center w-full flex flex-col gap-4`}
       >
         <div className="gap-1 flex flex-col">
-          <input
-            type="text"
-            className="grow"
-            value={displayName}
-            required
-            {...register("displayName")}
-          />
+          <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
+            <span className="border-r border-primary pr-2 text-sm">
+              Display Name
+            </span>
+            <input
+              type="text"
+              className="grow"
+              defaultValue={displayName}
+              required
+              {...register("displayName")}
+            />
+          </label>
           {errors.displayName && (
             <span className="text-letter mb-2 mt-1">
               {String(errors.displayName.message)}
@@ -94,13 +99,18 @@ const EditProfile: React.FC<EditProfileProps> = ({
           )}
         </div>
         <div className="gap-1 flex flex-col">
-          <input
-            type="text"
-            className="grow"
-            value={username}
-            required
-            {...register("username")}
-          />
+          <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
+            <span className="border-r border-primary pr-2 text-sm">
+              Username
+            </span>
+            <input
+              type="text"
+              className="grow"
+              defaultValue={username}
+              required
+              {...register("username")}
+            />
+          </label>
           {errors.username && (
             <span className="text-letter mb-2 mt-1">
               {String(errors.username.message)}

@@ -107,7 +107,7 @@ const ProfileCard = () => {
                   <div
                     className={`flex flex-col gap-4 items-center ${Headings.className}`}
                   >
-                    <span className="text-xl text-primary">
+                    <span className="text-xl text-white">
                       Photo uploaded! Refreshing...
                     </span>
                     <span className="loading loading-spinner text-primary loading-lg" />
@@ -122,7 +122,7 @@ const ProfileCard = () => {
                   <div
                     className={`flex flex-col gap-4 items-center ${Headings.className}`}
                   >
-                    <span className="text-xl text-primary">
+                    <span className="text-xl text-white">
                       Bio updated! Refreshing...
                     </span>
                     <span className="loading loading-spinner text-primary loading-lg" />
@@ -139,7 +139,7 @@ const ProfileCard = () => {
                       isEditing={handleToggle}
                       edited={handleEdited}
                       displayName={user.displayName}
-                      username={user.displayName}
+                      username={user.username}
                       currentBio={user.bio}
                       location={user.location}
                     />

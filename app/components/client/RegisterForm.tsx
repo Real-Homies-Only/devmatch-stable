@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "@/app/context/AuthContext";
 import Modal from "react-modal";
 
-import { mdiGoogle } from "@mdi/js";
+import { mdiArrowLeft } from "@mdi/js";
 import { Headings } from "@/app/fonts/roboto";
 import { Body } from "@/app/fonts/roboto";
 
@@ -61,7 +61,7 @@ const RegisterForm = () => {
         setRegistered(true);
         setTimeout(() => {
           router.push("/");
-        }, 2000);
+        }, 3500);
       } else {
         throw new Error();
       }
@@ -85,7 +85,18 @@ const RegisterForm = () => {
 
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
-      <div className={`${Headings.className} text-xl mb-4`}>Join DevMatch</div>
+      <div
+        className={`${Body.className} flex flex-row gap-2 mb-2 `}
+        onClick={() => router.back()}
+      >
+        <span className="flex flex-row px-2 rounded-md gap-2 hover:bg-gray-300 cursor-pointer">
+          <Icon path={mdiArrowLeft} size={1} />
+          Back
+        </span>
+      </div>
+      <div className={`${Headings.className} text-xl mb-4 self-center`}>
+        Join DevMatch
+      </div>
       <Modal
         isOpen={registered}
         contentLabel="Loading..."
@@ -113,7 +124,7 @@ const RegisterForm = () => {
             <input
               type="text"
               className="grow"
-              placeholder="Aparicio"
+              placeholder="AJ Aparicio"
               {...register("displayName")}
             />
           </label>
@@ -228,13 +239,6 @@ const RegisterForm = () => {
           </a>
         </div>
       </form>
-      <div className="divider divider-primary">OR</div>
-      <button
-        className={`${Body.className} flex flex-row items-center font-light btn btn-outline btn-letter border-primary self-center`}
-      >
-        <Icon path={mdiGoogle} size={0.8} />
-        <span>Register with Google</span>
-      </button>
     </div>
   );
 };
