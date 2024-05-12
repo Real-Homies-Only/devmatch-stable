@@ -13,11 +13,10 @@ import { auth } from "../utils/firebaseConfig";
 interface AuthContextValue {
   user: UserInterface | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  loginWithEmail: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<boolean>;
-  signUp: (
-    firstname: string,
-    lastName: string,
+  signUpWithEmail: (
+    displayName: string,
     username: string,
     userType: string,
     email: string,
@@ -28,9 +27,10 @@ interface AuthContextValue {
 const defaultValue: AuthContextValue = {
   user: null,
   loading: true,
-  login: () => Promise.resolve(false),
+  loginWithEmail: () => Promise.resolve(false),
+
   logout: () => Promise.resolve(false),
-  signUp: () => Promise.resolve(false)
+  signUpWithEmail: () => Promise.resolve(false)
 };
 
 export const AuthContext = createContext<AuthContextValue>(defaultValue);
@@ -55,8 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         const userInfo = {
           id: currentUser.uid,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          displayName: user.displayName,
           username: user.username,
           profilePicture: user.profilePicture,
           bio: user.bio,
@@ -80,10 +79,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const loginWithEmail = async (
+    email: string,
+    password: string
+  ): Promise<boolean> => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      return true;
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch(`/api/user/${user.uid}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+      const database = await response.json();
+      if (!user) {
+        throw new Error();
+      } else if (user && !database.user) {
+        throw new Error();
+      } else {
+        return true;
+      }
     } catch (err) {
       return false;
     }
@@ -98,9 +111,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (
-    firstName: string,
-    lastName: string,
+  const signUpWithEmail = async (
+    displayName: string,
     username: string,
     userType: string,
     email: string,
@@ -112,14 +124,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         email,
         password
       );
-      if (!user) {
-        throw new Error("User not registered!");
-      }
 
       const data = {
         id: user.uid,
-        firstName: firstName,
-        lastName: lastName,
+        displayName: displayName,
         username: username,
         userType: userType
       };
@@ -139,7 +147,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const value: AuthContextValue = { user, login, logout, signUp, loading };
+  const value: AuthContextValue = {
+    user,
+    loginWithEmail,
+    logout,
+    signUpWithEmail,
+    loading
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

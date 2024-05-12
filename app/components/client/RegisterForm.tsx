@@ -8,14 +8,13 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "@/app/context/AuthContext";
 import Modal from "react-modal";
 
-import { mdiGoogle } from "@mdi/js";
+import { mdiArrowLeft } from "@mdi/js";
 import { Headings } from "@/app/fonts/roboto";
 import { Body } from "@/app/fonts/roboto";
 
 const RegisterFormSchema = z
   .object({
-    firstName: z.string().min(2),
-    lastName: z.string().min(2),
+    displayName: z.string().min(2),
     username: z
       .string()
       .min(4, "Username should be more than 4 characters")
@@ -39,7 +38,7 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registered, setRegistered] = useState<boolean>(false);
-  const { signUp, loading, user } = useContext(AuthContext);
+  const { signUpWithEmail, loading, user } = useContext(AuthContext);
   const router = useRouter();
 
   const {
@@ -49,12 +48,10 @@ const RegisterForm = () => {
   } = useForm<RegisterForm>({ resolver: zodResolver(RegisterFormSchema) });
 
   const handleRegister = async (registerData: RegisterForm) => {
-    const { firstName, lastName, username, email, password, userType } =
-      registerData;
+    const { displayName, username, email, password, userType } = registerData;
     try {
-      const result = await signUp(
-        firstName,
-        lastName,
+      const result = await signUpWithEmail(
+        displayName,
         username,
         userType,
         email,
@@ -64,12 +61,12 @@ const RegisterForm = () => {
         setRegistered(true);
         setTimeout(() => {
           router.push("/");
-        }, 2000);
+        }, 3500);
       } else {
         throw new Error();
       }
     } catch (err) {
-      setErrorMessage("Invalid email or password");
+      setErrorMessage("Email already in use!");
     }
   };
 
@@ -88,7 +85,18 @@ const RegisterForm = () => {
 
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
-      <div className={`${Headings.className} text-xl mb-4`}>Join DevMatch</div>
+      <div
+        className={`${Body.className} flex flex-row gap-2 mb-2 `}
+        onClick={() => router.back()}
+      >
+        <span className="flex flex-row px-2 rounded-md gap-2 hover:bg-gray-300 cursor-pointer">
+          <Icon path={mdiArrowLeft} size={1} />
+          Back
+        </span>
+      </div>
+      <div className={`${Headings.className} text-xl mb-4 self-center`}>
+        Join DevMatch
+      </div>
       <Modal
         isOpen={registered}
         contentLabel="Loading..."
@@ -111,36 +119,18 @@ const RegisterForm = () => {
         <div className="gap-1">
           <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
             <span className="border-r border-primary pr-2 text-sm">
-              First Name
+              Display Name
             </span>
             <input
               type="text"
               className="grow"
-              placeholder="AJ"
-              {...register("firstName")}
+              placeholder="AJ Aparicio"
+              {...register("displayName")}
             />
           </label>
-          {errors.firstName && (
-            <span className="text-letter">
-              {String(errors.firstName.message)}
-            </span>
-          )}
-        </div>
-        <div className="gap-1">
-          <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
-            <span className="border-r border-primary pr-2 text-sm">
-              Last Name
-            </span>
-            <input
-              type="text"
-              className="grow"
-              placeholder="Aparicio"
-              {...register("lastName")}
-            />
-          </label>
-          {errors.lastName && (
+          {errors.displayName && (
             <span className="text-letter mt-1">
-              {String(errors.lastName.message)}
+              {String(errors.displayName.message)}
             </span>
           )}
         </div>
@@ -249,13 +239,6 @@ const RegisterForm = () => {
           </a>
         </div>
       </form>
-      <div className="divider divider-primary">OR</div>
-      <button
-        className={`${Body.className} flex flex-row items-center font-light btn btn-outline btn-letter border-primary self-center`}
-      >
-        <Icon path={mdiGoogle} size={0.8} />
-        <span>Register with Google</span>
-      </button>
     </div>
   );
 };
