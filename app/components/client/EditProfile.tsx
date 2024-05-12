@@ -9,6 +9,11 @@ import Icon from "@mdi/react";
 import { mdiFloppy } from "@mdi/js";
 
 const ProfileFormSchema = z.object({
+  displayName: z.string().min(2),
+  username: z
+    .string()
+    .min(4, "Username should be more than 4 characters")
+    .max(24, "Username should be less than 14 characters"),
   bio: z
     .string()
     .min(5, "Bio must at least be 5 characters long!")
@@ -20,6 +25,8 @@ type ProfileForm = z.infer<typeof ProfileFormSchema>;
 
 interface EditProfileProps {
   id: string;
+  displayName: string;
+  username: string;
   currentBio: string;
   location: string;
   isEditing: (value: boolean) => void;
@@ -28,6 +35,8 @@ interface EditProfileProps {
 
 const EditProfile: React.FC<EditProfileProps> = ({
   id,
+  displayName,
+  username,
   currentBio,
   location,
   isEditing,
@@ -70,6 +79,34 @@ const EditProfile: React.FC<EditProfileProps> = ({
         onSubmit={handleSubmit(handleEdit)}
         className={`${Body.className} self-center w-full flex flex-col gap-4`}
       >
+        <div className="gap-1 flex flex-col">
+          <input
+            type="text"
+            className="grow"
+            value={displayName}
+            required
+            {...register("displayName")}
+          />
+          {errors.displayName && (
+            <span className="text-letter mb-2 mt-1">
+              {String(errors.displayName.message)}
+            </span>
+          )}
+        </div>
+        <div className="gap-1 flex flex-col">
+          <input
+            type="text"
+            className="grow"
+            value={username}
+            required
+            {...register("username")}
+          />
+          {errors.username && (
+            <span className="text-letter mb-2 mt-1">
+              {String(errors.username.message)}
+            </span>
+          )}
+        </div>
         <div className="gap-1 flex flex-col">
           <textarea
             className="textarea textarea-bordered textarea-primary w-full"

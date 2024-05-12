@@ -131,13 +131,6 @@ const ProfileCard = () => {
               </span>
             </div>
             <div className="self-center text-letter text-center">
-              <div className="flex flex-col">
-                <div className="text-2xl ">
-                  {user.firstName} {user.lastName}
-                </div>
-                <div className="text-letter text-md">{user.userType}</div>
-                <div className="text-gray-400 text-sm">@{user.username}</div>
-              </div>
               {isEditing ? (
                 <Fragment>
                   <div className="mt-4 mx-4">
@@ -145,6 +138,8 @@ const ProfileCard = () => {
                       id={user.id}
                       isEditing={handleToggle}
                       edited={handleEdited}
+                      displayName={user.displayName}
+                      username={user.displayName}
                       currentBio={user.bio}
                       location={user.location}
                     />
@@ -160,6 +155,13 @@ const ProfileCard = () => {
                       <Icon path={mdiPencil} size={1} />
                     </div>
                     <div>Edit Profile</div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="text-2xl ">{user.displayName}</div>
+                    <div className="text-letter text-md">{user.userType}</div>
+                    <div className="text-gray-400 text-sm">
+                      @{user.username}
+                    </div>
                   </div>
                   <div className="mb-2">{user.bio}</div>
                   <div className="text-gray-500 gap-2 flex flex-row items-center justify-center">

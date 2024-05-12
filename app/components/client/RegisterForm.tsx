@@ -15,7 +15,7 @@ import { Body } from "@/app/fonts/roboto";
 const RegisterFormSchema = z
   .object({
     firstName: z.string().min(2),
-    lastName: z.string().min(2),
+    displayName: z.string().min(2),
     username: z
       .string()
       .min(4, "Username should be more than 4 characters")
@@ -39,7 +39,7 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registered, setRegistered] = useState<boolean>(false);
-  const { signUp, loading, user } = useContext(AuthContext);
+  const { signUpWithEmail, loading, user } = useContext(AuthContext);
   const router = useRouter();
 
   const {
@@ -49,12 +49,10 @@ const RegisterForm = () => {
   } = useForm<RegisterForm>({ resolver: zodResolver(RegisterFormSchema) });
 
   const handleRegister = async (registerData: RegisterForm) => {
-    const { firstName, lastName, username, email, password, userType } =
-      registerData;
+    const { displayName, username, email, password, userType } = registerData;
     try {
-      const result = await signUp(
-        firstName,
-        lastName,
+      const result = await signUpWithEmail(
+        displayName,
         username,
         userType,
         email,
@@ -69,7 +67,7 @@ const RegisterForm = () => {
         throw new Error();
       }
     } catch (err) {
-      setErrorMessage("Invalid email or password");
+      setErrorMessage("Email already in use!");
     }
   };
 
@@ -111,36 +109,18 @@ const RegisterForm = () => {
         <div className="gap-1">
           <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
             <span className="border-r border-primary pr-2 text-sm">
-              First Name
-            </span>
-            <input
-              type="text"
-              className="grow"
-              placeholder="AJ"
-              {...register("firstName")}
-            />
-          </label>
-          {errors.firstName && (
-            <span className="text-letter">
-              {String(errors.firstName.message)}
-            </span>
-          )}
-        </div>
-        <div className="gap-1">
-          <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
-            <span className="border-r border-primary pr-2 text-sm">
-              Last Name
+              Display Name
             </span>
             <input
               type="text"
               className="grow"
               placeholder="Aparicio"
-              {...register("lastName")}
+              {...register("displayName")}
             />
           </label>
-          {errors.lastName && (
+          {errors.displayName && (
             <span className="text-letter mt-1">
-              {String(errors.lastName.message)}
+              {String(errors.displayName.message)}
             </span>
           )}
         </div>

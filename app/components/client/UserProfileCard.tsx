@@ -24,8 +24,7 @@ const UserProfileCard: React.FC = () => {
 
         const userInfo = {
           id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          displayName: user.displayName,
           username: user.username,
           profilePicture: user.profilePicture,
           bio: user.bio,
@@ -77,9 +76,7 @@ const UserProfileCard: React.FC = () => {
             </div>
             <div className="self-center text-letter text-center">
               <div className="flex flex-col mb-2">
-                <div className="text-2xl ">
-                  {user.firstName} {user.lastName}
-                </div>
+                <div className="text-2xl ">{user.displayName}</div>
                 <div className="text-letter text-md">{user.userType}</div>
                 <div className="text-gray-400 text-sm">@{user.username}</div>
               </div>

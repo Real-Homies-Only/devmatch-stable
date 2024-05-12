@@ -15,8 +15,7 @@ datasource db {
 
 model Users {
   id             String  @id @unique
-  firstName      String
-  lastName       String
+  displayName    String
   username       String  @unique @default(cuid()) @db.VarChar(14)
   userType       String
   location       String  @default("None")

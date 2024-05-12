@@ -23,7 +23,7 @@ type LoginForm = z.infer<typeof LoginFormSchema>;
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const { login, loading, user } = useContext(AuthContext);
+  const { loginWithEmail, loading, user } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
@@ -34,7 +34,7 @@ const LoginForm = () => {
   const handleLogin = async (loginData: LoginForm) => {
     const { email, password } = loginData;
     try {
-      const result = await login(email, password);
+      const result = await loginWithEmail(email, password);
       if (result === true) {
         setLoggedIn(true);
         setTimeout(() => {
