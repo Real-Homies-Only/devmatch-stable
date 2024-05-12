@@ -53,7 +53,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({ profilePhotoURL }) => {
           {user && user.userType === "Client" && (
             <li>
               <div
-                onClick={() => router.push("/projectTable")}
+                onClick={() => router.push("/project")}
                 className="hover:bg-gray-100"
               >
                 <a className="flex flex-row">

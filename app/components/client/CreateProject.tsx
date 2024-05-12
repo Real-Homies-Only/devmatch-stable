@@ -1,54 +1,71 @@
 "use client";
 import React, { Fragment, useState, useContext } from "react";
 import Icon from "@mdi/react";
-import { mdiContentSave, mdiClose } from "@mdi/js";
+import { mdiContentSave, mdiClose, mdiArrowLeft } from "@mdi/js";
 import { AuthContext } from "@/app/context/AuthContext";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Modal from "react-modal";
+import { useRouter } from "next/navigation";
+
+const schema = z.object({
+  projectName: z.string().min(1, "Project name is required"),
+  category: z.string().min(1, "Category is required"),
+  projectManagement: z.string().optional(),
+  position: z.string().optional(),
+  language: z.string().optional(),
+  description: z.string().optional()
+});
+
+type FormData = z.infer<typeof schema>;
 
 const CreateProject: React.FC = () => {
-  const [projectName, setProjectName] = useState("");
-  const [category, setCategory] = useState("");
-  const [projectManagement, setProjectManagement] = useState("");
-  const [position, setPosition] = useState("");
-  const [language, setLanguage] = useState("");
-  const [description, setDescription] = useState("");
-
   const { user } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<FormData>({
+    resolver: zodResolver(schema)
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: FormData) => {
     if (!user) {
       console.error("Please Register First!");
       return;
     }
-    const categoryValue = getCategoryName(category);
+    const categoryValue = getCategoryName(data.category);
 
     try {
-      const response = await fetch("/api/projectTable", {
+      const response = await fetch("/api/project", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          projectName,
+          ...data,
           category: categoryValue,
-          projectManagement,
-          position,
-          language,
-          description,
           clientId: user.id
         })
       });
 
       if (response.ok) {
-        // Handle successful project creation
-        console.log("Project created successfully");
+        setModalMessage("Project created successfully");
+        setIsModalOpen(true);
+        reset();
       } else {
-        // Handle error
-        console.error("Failed to create project");
+        setModalMessage("Failed to create project");
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error("Error:", error);
+      setModalMessage("An error occurred");
+      setIsModalOpen(true);
     }
   };
 
@@ -65,98 +82,175 @@ const CreateProject: React.FC = () => {
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleBackToHome = () => {
+    router.push("/"); //put the directory here after completing the form
+  };
+
   return (
     <Fragment>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Project Creation Result"
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+        appElement={document.getElementById("root") || undefined}
+      >
+        <div className="bg-white p-6 rounded-md shadow-md z-50">
+          <h2 className="text-xl font-bold mb-4">{modalMessage}</h2>
+          <div className="flex justify-end">
+            <button
+              className="btn btn-primary flex items-center"
+              onClick={handleBackToHome}
+            >
+              <Icon
+                path={mdiArrowLeft}
+                size={0.8}
+                className="inline-block mr-2"
+              />
+              Back to Home
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <div className="flex justify-center">
-        <div className="artboard rounded-xl gap-2 border-letter border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 shadow-md">
-          <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Project Name</span>
+        <div className="w-full max-w-md mt-10">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="bg-white border border-black shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          >
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="projectName"
+              >
+                Project Name
               </label>
               <input
+                id="projectName"
                 type="text"
                 placeholder="Enter project name"
-                className="input input-bordered"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                className={`input input-bordered w-full ${
+                  errors.projectName ? "input-error" : ""
+                }`}
+                {...register("projectName")}
               />
+              {errors.projectName && (
+                <span className="text-error">{errors.projectName.message}</span>
+              )}
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Category</span>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="category"
+              >
+                Category
               </label>
               <select
-                className="select select-bordered"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                id="category"
+                className={`select select-bordered w-full ${
+                  errors.category ? "select-error" : ""
+                }`}
+                {...register("category")}
               >
                 <option value="">Select a category</option>
                 <option value="game">Game Development</option>
                 <option value="mobile">Mobile Application</option>
                 <option value="web">Web Development</option>
               </select>
+              {errors.category && (
+                <span className="text-error">{errors.category.message}</span>
+              )}
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Project Management</span>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="projectManagement"
+              >
+                Project Management
               </label>
               <input
+                id="projectManagement"
                 type="text"
                 placeholder="Enter project management type"
-                className="input input-bordered"
-                value={projectManagement}
-                onChange={(e) => setProjectManagement(e.target.value)}
+                className="input input-bordered w-full"
+                {...register("projectManagement")}
               />
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Position</span>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="position"
+              >
+                Position
               </label>
               <input
+                id="position"
                 type="text"
                 placeholder="Enter your position"
-                className="input input-bordered"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
+                className="input input-bordered w-full"
+                {...register("position")}
               />
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Language</span>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="language"
+              >
+                Language
               </label>
               <input
+                id="language"
                 type="text"
                 placeholder="Enter programming language"
-                className="input input-bordered"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                className="input input-bordered w-full"
+                {...register("language")}
               />
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Description</span>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="description"
+              >
+                Description
               </label>
               <textarea
-                className="textarea textarea-bordered"
+                id="description"
+                className="textarea textarea-bordered w-full"
                 placeholder="Enter project description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...register("description")}
               ></textarea>
             </div>
 
-            <div className="flex justify-end mt-4">
-              <button type="submit" className="btn btn-primary gap-2">
-                <Icon path={mdiContentSave} size={0.8} />
+            <div className="flex items-center justify-between">
+              <button type="submit" className="btn btn-primary">
+                <Icon
+                  path={mdiContentSave}
+                  size={0.8}
+                  className="inline-block mr-2"
+                />
                 Submit
               </button>
-              <button type="button" className="btn btn-ghost ml-2">
-                <Icon path={mdiClose} size={0.8} />
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => history.back()}
+              >
+                <Icon
+                  path={mdiClose}
+                  size={0.8}
+                  className="inline-block mr-2"
+                />
                 Cancel
               </button>
             </div>
