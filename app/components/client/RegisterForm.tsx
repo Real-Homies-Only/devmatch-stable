@@ -14,7 +14,6 @@ import { Body } from "@/app/fonts/roboto";
 
 const RegisterFormSchema = z
   .object({
-    firstName: z.string().min(2),
     displayName: z.string().min(2),
     username: z
       .string()
