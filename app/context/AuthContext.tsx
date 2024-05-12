@@ -4,9 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 
 import { UserInterface } from "../utils/UserProps";
@@ -16,7 +14,6 @@ interface AuthContextValue {
   user: UserInterface | null;
   loading: boolean;
   loginWithEmail: (email: string, password: string) => Promise<boolean>;
-  loginWithGoogle: () => Promise<boolean>;
   logout: () => Promise<boolean>;
   signUpWithEmail: (
     displayName: string,
@@ -25,21 +22,15 @@ interface AuthContextValue {
     email: string,
     password: string
   ) => Promise<boolean>;
-  signUpWithGoogle: (
-    displayName: string,
-    username: string,
-    userType: string
-  ) => Promise<boolean>;
 }
 
 const defaultValue: AuthContextValue = {
   user: null,
   loading: true,
   loginWithEmail: () => Promise.resolve(false),
-  loginWithGoogle: () => Promise.resolve(false),
+
   logout: () => Promise.resolve(false),
-  signUpWithEmail: () => Promise.resolve(false),
-  signUpWithGoogle: () => Promise.resolve(false)
+  signUpWithEmail: () => Promise.resolve(false)
 };
 
 export const AuthContext = createContext<AuthContextValue>(defaultValue);
@@ -110,25 +101,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const loginWithGoogle = async (): Promise<boolean> => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const { user } = await signInWithPopup(auth, provider);
-      const response = await fetch(`/api/user/${user.uid}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      });
-      const database = await response.json();
-      if (!user || (user && !database.user)) {
-        throw new Error();
-      } else {
-        return true;
-      }
-    } catch (err) {
-      return false;
-    }
-  };
-
   const logout = async (): Promise<boolean> => {
     try {
       await signOut(auth);
@@ -152,16 +124,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         password
       );
 
-      const existingUser = await fetch(`/api/user/${user.uid}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      });
-      const database = await existingUser.json();
-
-      if (user && database.user) {
-        throw new Error("User already registered!");
-      }
-
       const data = {
         id: user.uid,
         displayName: displayName,
@@ -184,17 +146,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUpWithGoogle = async (): Promise<boolean> => {
-    return false;
-  };
-
   const value: AuthContextValue = {
     user,
     loginWithEmail,
-    loginWithGoogle,
     logout,
     signUpWithEmail,
-    signUpWithGoogle,
     loading
   };
 
