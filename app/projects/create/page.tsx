@@ -1,16 +1,17 @@
 import React from "react";
 import NavBar from "@/app/components/server/NavBar";
 import { AuthProvider } from "@/app/context/AuthContext";
-import BrowseProject from "@/app/components/client/BrowseProject";
-const page = () => {
+import CreateProject from "@/app/components/client/CreateProject";
+
+const Projects = () => {
   return (
     <div>
       <AuthProvider>
         <NavBar />
-        <BrowseProject />
+        <CreateProject />
       </AuthProvider>
     </div>
   );
 };
 
-export default page;
+export default Projects;
