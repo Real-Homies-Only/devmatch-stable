@@ -25,7 +25,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const newproject = await prisma.Projects.create({
+    const newProject = await prisma.projects.create({
       data: {
         projectName: projectData.projectName,
         category: projectData.category,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     });
 
-    return NextResponse.json(newproject, { status: 201 });
+    return NextResponse.json(newProject, { status: 201 });
   } catch (error) {
     console.error("Error creating project:", error);
     return NextResponse.json(
