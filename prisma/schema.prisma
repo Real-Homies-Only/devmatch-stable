@@ -22,7 +22,7 @@ model Users {
 }
 
 model Projects {
-  id          Int     @id @unique @default(autoincrement())
+  id          String  @id @unique @default(cuid()) @db.VarChar(32)
   projectName String
   category    String
   language    String
