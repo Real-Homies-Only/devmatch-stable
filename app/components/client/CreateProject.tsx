@@ -12,8 +12,6 @@ import { useRouter } from "next/navigation";
 const schema = z.object({
   projectName: z.string().min(1, "Project name is required"),
   category: z.string().min(1, "Category is required"),
-  projectManagement: z.string().optional(),
-  position: z.string().optional(),
   language: z.string().optional(),
   description: z.string().optional()
 });
@@ -42,7 +40,7 @@ const CreateProject: React.FC = () => {
     const categoryValue = getCategoryName(data.category);
 
     try {
-      const response = await fetch("/api/project", {
+      const response = await fetch("/api/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -167,38 +165,6 @@ const CreateProject: React.FC = () => {
               {errors.category && (
                 <span className="text-error">{errors.category.message}</span>
               )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="projectManagement"
-              >
-                Project Management
-              </label>
-              <input
-                id="projectManagement"
-                type="text"
-                placeholder="Enter project management type"
-                className="input input-bordered w-full"
-                {...register("projectManagement")}
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="position"
-              >
-                Position
-              </label>
-              <input
-                id="position"
-                type="text"
-                placeholder="Enter your position"
-                className="input input-bordered w-full"
-                {...register("position")}
-              />
             </div>
 
             <div className="mb-4">
