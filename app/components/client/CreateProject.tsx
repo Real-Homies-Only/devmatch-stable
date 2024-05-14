@@ -40,7 +40,7 @@ const CreateProject: React.FC = () => {
     const categoryValue = getCategoryName(data.category);
 
     try {
-      const response = await fetch("/api/projects", {
+      const response = await fetch("/api/project", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
