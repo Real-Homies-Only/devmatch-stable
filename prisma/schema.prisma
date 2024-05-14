@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,35 +8,35 @@ datasource db {
 }
 
 model Users {
-  id                   String               @id @unique
-  displayName          String
-  username             String               @unique @default(cuid()) @db.VarChar(14)
-  userType             String
-  location             String               @default("None")
-  bio                  String               @default("User has no info") @db.VarChar(255)
-  profilePicture       String               @default("defaultPhoto.png")
-  isAdmin              Boolean              @default(false)
-  projects             Project[]
-  participatedProjects ProjectParticipant[]
+  id             String     @id @unique
+  username       String     @unique @default(cuid()) @db.VarChar(14)
+  userType       String
+  location       String     @default("None")
+  bio            String     @default("User has no info") @db.VarChar(255)
+  profilePicture String     @default("defaultPhoto.png")
+  isAdmin        Boolean    @default(false)
+  displayName    String
+  user           Bids[]
+  client         Projects[] @relation("Client")
+  developer      Projects[] @relation("Developer")
 }
 
-model Project {
-  id                Int                  @id @unique @default(autoincrement())
-  projectName       String
-  category          String
-  projectManagement String
-  position          String
-  language          String
-  description       String
-  userId            String
-  user              Users                @relation(fields: [userId], references: [id])
-  participants      ProjectParticipant[]
+model Projects {
+  id          Int     @id @unique @default(autoincrement())
+  projectName String
+  category    String
+  language    String
+  description String
+  clientId    String
+  developerId String?
+  client      Users   @relation("Client", fields: [clientId], references: [id])
+  developer   Users?  @relation("Developer", fields: [developerId], references: [id])
 }
 
-model ProjectParticipant {
-  id        String  @id @unique
-  projectId Int
-  userId    String
-  user      Users   @relation(fields: [userId], references: [id])
-  project   Project @relation(fields: [projectId], references: [id])
+model Bids {
+  id         Int    @id @unique @default(autoincrement())
+  bidComment String
+  projectId  Int
+  userId     String
+  user       Users  @relation(fields: [userId], references: [id])
 }
