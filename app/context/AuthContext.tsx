@@ -93,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!user) {
         throw new Error();
       } else if (user && !database.user) {
+        logout();
         throw new Error();
       } else {
         return true;
