@@ -29,14 +29,16 @@ model Projects {
   description String
   clientId    String
   developerId String?
+  bid         Bids[]
   client      Users   @relation("Client", fields: [clientId], references: [id])
   developer   Users?  @relation("Developer", fields: [developerId], references: [id])
 }
 
 model Bids {
-  id         Int    @id @unique @default(autoincrement())
+  id         String   @id @unique @default(cuid()) @db.VarChar(32)
   bidComment String
-  projectId  Int
+  projectId  String
   userId     String
-  user       Users  @relation(fields: [userId], references: [id])
+  project    Projects @relation(fields: [projectId], references: [id])
+  user       Users    @relation(fields: [userId], references: [id])
 }
