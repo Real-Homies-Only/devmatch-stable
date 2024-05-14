@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import Modal from "react-modal";
 
-import { mdiGoogle, mdiArrowLeft } from "@mdi/js";
+import { mdiArrowLeft } from "@mdi/js";
 import { AuthContext } from "@/app/context/AuthContext";
 import { Headings } from "@/app/fonts/roboto";
 import { Body } from "@/app/fonts/roboto";
@@ -23,7 +23,7 @@ type LoginForm = z.infer<typeof LoginFormSchema>;
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const { login, loading, user } = useContext(AuthContext);
+  const { loginWithEmail, loading, user } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
@@ -34,7 +34,7 @@ const LoginForm = () => {
   const handleLogin = async (loginData: LoginForm) => {
     const { email, password } = loginData;
     try {
-      const result = await login(email, password);
+      const result = await loginWithEmail(email, password);
       if (result === true) {
         setLoggedIn(true);
         setTimeout(() => {
@@ -79,11 +79,13 @@ const LoginForm = () => {
         </div>
       </Modal>
       <div
-        className={`${Body.className} flex flex-col gap-2 hover:bg-gray-300`}
+        className={`${Body.className} flex flex-row gap-2 `}
         onClick={() => router.back()}
       >
-        <Icon path={mdiArrowLeft} size={1} />
-        <span>Back</span>
+        <span className="flex flex-row px-2 rounded-md gap-2 hover:bg-gray-300 cursor-pointer">
+          <Icon path={mdiArrowLeft} size={1} />
+          Back
+        </span>
       </div>
       <div className={`${Headings.className} text-xl mb-4 self-center`}>
         Join DevMatch
@@ -152,13 +154,6 @@ const LoginForm = () => {
           </div>
         </div>
       </form>
-      <div className="divider divider-primary">OR</div>
-      <button
-        className={`${Body.className} flex flex-row items-center font-light btn btn-outline btn-letter border-primary self-center`}
-      >
-        <Icon path={mdiGoogle} size={0.8} />
-        <span>Login With Google</span>
-      </button>
     </div>
   );
 };

@@ -21,6 +21,8 @@ const bucket: S3Client = new S3Client({
 const prisma = new PrismaClient();
 
 interface profileData {
+  displayName: string;
+  username: string;
   bio: string;
   location: string;
 }
@@ -110,9 +112,17 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { bio, location } = await request.json();
+    const { displayName, username, bio, location } = await request.json();
 
-    const data: profileData = { bio, location };
+    const data: profileData = { displayName, username, bio, location };
+
+    if (displayName) {
+      data.displayName = displayName;
+    }
+
+    if (username) {
+      data.username = username;
+    }
 
     if (bio) {
       data.bio = bio;
