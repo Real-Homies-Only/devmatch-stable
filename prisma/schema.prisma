@@ -17,6 +17,7 @@ model Users {
   isAdmin        Boolean    @default(false)
   displayName    String
   user           Bids[]
+  sender         Messages[]
   client         Projects[] @relation("Client")
   developer      Projects[] @relation("Developer")
 }
@@ -41,4 +42,19 @@ model Bids {
   userId     String
   project    Projects @relation(fields: [projectId], references: [id])
   user       Users    @relation(fields: [userId], references: [id])
+}
+
+model Messages {
+  id        String      @id @unique @default(cuid()) @db.VarChar(32)
+  content   String
+  type      MessageType
+  projectId String
+  senderId  String
+  sentTime  DateTime    @default(now())
+  sender    Users       @relation(fields: [senderId], references: [id])
+}
+
+enum MessageType {
+  text
+  photo
 }

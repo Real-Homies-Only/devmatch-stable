@@ -24,25 +24,27 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
   };
 
   useEffect(() => {
-    let otherUserId;
+    if (user) {
+      let otherUserId;
 
-    if (user?.id === project.clientId) {
-      otherUserId = project.developerId;
-    } else {
-      otherUserId = project.clientId;
+      if (user?.id === project.clientId) {
+        otherUserId = project.developerId;
+      } else {
+        otherUserId = project.clientId;
+      }
+
+      const getOtherUserId = async () => {
+        const response = await fetch(`/api/user/${otherUserId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+        const { user } = await response.json();
+
+        setOtherUser(user);
+      };
+
+      getOtherUserId();
     }
-
-    const getOtherUserId = async () => {
-      const response = await fetch(`/api/user/${otherUserId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      });
-      const { user } = await response.json();
-
-      setOtherUser(user);
-    };
-
-    getOtherUserId();
   }, []);
 
   if (loading) {
@@ -55,7 +57,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
     <Fragment>
       {project.developerId ? (
         project && user && otherUser ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col self-center">
             <div className="flex">
               {selected === 1 ? (
                 <ProjectHome
