@@ -32,7 +32,7 @@ model Projects {
   bid         Bids[]
   client      Users   @relation("Client", fields: [clientId], references: [id])
   developer   Users?  @relation("Developer", fields: [developerId], references: [id])
-}
+}                 
 
 model Bids {
   id         String   @id @unique @default(cuid()) @db.VarChar(32)
