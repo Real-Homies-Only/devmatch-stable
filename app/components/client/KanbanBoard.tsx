@@ -11,9 +11,9 @@ import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
 
-const CustomKanban = () => {
+const KanbanBoard = () => {
   return (
-    <div className="h-screen w-full bg-neutral-900 text-neutral-50">
+    <div className="h-screen w-full bg-neutral-900 text-neutral-50 flex flex-col">
       <Board />
     </div>
   );
@@ -22,36 +22,41 @@ const CustomKanban = () => {
 const Board = () => {
   const [cards, setCards] = useState<CardType[]>([]);
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12">
-      <Column
-        title="Backlog"
-        column="backlog"
-        headingColor="text-neutral-500"
-        cards={cards}
+    <div className="flex flex-col h-full w-full gap-3 overflow-scroll p-4 md:p-6 lg:p-12 relative">
+      <div className="flex flex-wrap gap-3">
+        <Column
+          title="Backlog"
+          column="backlog"
+          headingColor="text-neutral-500"
+          cards={cards}
+          setCards={setCards}
+        />
+        <Column
+          title="TODO"
+          column="todo"
+          headingColor="text-yellow-200"
+          cards={cards}
+          setCards={setCards}
+        />
+        <Column
+          title="In progress"
+          column="doing"
+          headingColor="text-blue-200"
+          cards={cards}
+          setCards={setCards}
+        />
+        <Column
+          title="Complete"
+          column="done"
+          headingColor="text-emerald-200"
+          cards={cards}
+          setCards={setCards}
+        />
+      </div>
+      <DeleteBox
         setCards={setCards}
+        className="absolute bottom-4 right-4 w-40 h-40"
       />
-      <Column
-        title="TODO"
-        column="todo"
-        headingColor="text-yellow-200"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="In progress"
-        column="doing"
-        headingColor="text-blue-200"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="Complete"
-        column="done"
-        headingColor="text-emerald-200"
-        cards={cards}
-        setCards={setCards}
-      />
-      <DeleteBox setCards={setCards} />
     </div>
   );
 };
@@ -175,7 +180,7 @@ const Column = ({
   const filteredCards = cards.filter((c) => c.column === column);
 
   return (
-    <div className="w-56 shrink-0">
+    <div className="w-full sm:w-56 shrink-0 md:w-64 lg:w-72">
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium ${headingColor}`}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
@@ -237,9 +242,11 @@ const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
 };
 
 const DeleteBox = ({
-  setCards
+  setCards,
+  className
 }: {
   setCards: Dispatch<SetStateAction<CardType[]>>;
+  className?: string;
 }) => {
   const [active, setActive] = useState(false);
   const handleDragOver = (e: DragEvent) => {
@@ -264,11 +271,11 @@ const DeleteBox = ({
       onDrop={handleDragEnd}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
+      className={`grid place-content-center rounded border text-3xl ${
         active
           ? "border-red-800 bg-red-800/20 text-red-500"
           : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
-      }`}
+      } ${className}`}
     >
       {active ? <FaFire className="animate-bounce" /> : <FiTrash />}
     </div>
@@ -283,13 +290,13 @@ type AddCardProps = {
 const AddCard = ({ column, setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
-  const [wordCount, setWordCount] = useState(0);
-  const maxWords = 50; // adjust this to your desired word limit
+  const [characterCount, setCharacterCount] = useState(0);
+  const maxCharacters = 100; // adjust this to your desired character limit
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!text.trim().length || wordCount > maxWords) return;
+    if (!text.trim().length || characterCount > maxCharacters) return;
 
     const newCard = {
       column,
@@ -304,15 +311,15 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
-    const newWordCount = newText.split(" ").length;
-    setWordCount(newWordCount);
+    const newCharacterCount = newText.length;
+    setCharacterCount(newCharacterCount);
     setText(newText);
   };
 
   return (
     <>
       {adding ? (
-        <motion.form layout onSubmit={handleSubmit}>
+        <motion.form layout onSubmit={handleSubmit} className="w-full">
           <textarea
             onChange={handleTextChange}
             placeholder="Add new task..."
@@ -327,17 +334,19 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
             </button>
             <button
               type="submit"
-              disabled={wordCount > maxWords}
+              disabled={characterCount > maxCharacters}
               className={`flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300 ${
-                wordCount > maxWords ? "opacity-50 cursor-not-allowed" : ""
+                characterCount > maxCharacters
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
             >
               <span>Add</span>
               <FiPlus />
             </button>
-            {wordCount > maxWords && (
+            {characterCount > maxCharacters && (
               <div className="text-xs text-red-500">
-                Word limit exceeded ({maxWords} words max)
+                Character limit exceeded ({maxCharacters} characters max)
               </div>
             )}
           </div>
@@ -363,4 +372,4 @@ type CardType = {
   column: ColumnType;
 };
 
-export default CustomKanban;
+export default KanbanBoard;
