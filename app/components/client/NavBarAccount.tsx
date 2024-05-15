@@ -21,7 +21,11 @@ const NavBarAccount = () => {
         {!user ? (
           <AccountButtons />
         ) : (
-          <ProfileButtons profilePhotoURL={user.profilePicture} />
+          <ProfileButtons
+            profilePhotoURL={user.profilePicture}
+            id={user.id}
+            userType={user.userType}
+          />
         )}
       </div>
     </Fragment>
