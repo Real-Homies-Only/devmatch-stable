@@ -1,6 +1,7 @@
 "use client";
 import { Body, Headings } from "@/app/fonts/roboto";
 import { ProjectType } from "@/app/utils/ProjectProps";
+import { supabase } from "@/app/utils/supabase";
 import { UserType } from "@/app/utils/UserProps";
 import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
@@ -38,6 +39,26 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
       }
     };
     getBids();
+
+    const channel = supabase
+      .channel(`bidding-room`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "Bids"
+        },
+        (payload) => {
+          const newBid = payload.new as Bid;
+
+          setBids((prevBids) => [...prevBids, newBid]);
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [project, client]);
 
   const handleAcceptBid = async (userId: string) => {

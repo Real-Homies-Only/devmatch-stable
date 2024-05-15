@@ -3,6 +3,7 @@ import { MessagesType } from "@/app/utils/MessagesProps";
 import { UserType } from "@/app/utils/UserProps";
 import React, { Fragment, useEffect, useState } from "react";
 import { supabase } from "@/app/utils/supabase";
+import Image from "next/image";
 
 interface ProjectChatTabProps {
   sender: UserType;
@@ -41,6 +42,9 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
         (payload) => {
           console.log(payload);
           const newMessage = payload.new as MessagesType;
+          newMessage.sentTime = new Date(
+            newMessage.sentTime
+          ).toLocaleTimeString();
           setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
       )
@@ -60,9 +64,12 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
                 <div className={`chat chat-end `} key={index}>
                   <div className="chat-image avatar flex items-start justify-start">
                     <div className="w-10 rounded-full">
-                      <img
-                        alt="Tailwind CSS chat bubble component"
+                      <Image
+                        className=""
                         src={sender.profilePicture}
+                        alt="Profile Picture"
+                        width={480}
+                        height={480}
                       />
                     </div>
                   </div>
@@ -80,9 +87,12 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
                 <div className={`chat chat-start`} key={index}>
                   <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
-                      <img
-                        alt="Tailwind CSS chat bubble component"
+                      <Image
+                        className=""
                         src={receiver.profilePicture}
+                        alt="Profile Picture"
+                        width={480}
+                        height={480}
                       />
                     </div>
                   </div>
@@ -92,7 +102,7 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
                       {message.sentTime}
                     </time>
                   </div>
-                  <div className="chat-bubble bg-secondary">
+                  <div className="chat-bubble bg-primary">
                     {message.content}
                   </div>
                 </div>

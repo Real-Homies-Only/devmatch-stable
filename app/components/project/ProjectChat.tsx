@@ -73,7 +73,7 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
             </div>
           </div>
           <div className="grid grid-rows-[1fr_auto] h-full lg:border border-gray-500 lg:mx-12 mb-2 rounded-md p-4">
-            <div className="overflow-y-auto max-h-[calc(100vh-400px)] lg:max-h-[calc(100vh-450px)] lg:px-2">
+            <div className="flex-grow overflow-y-auto max-h-[calc(50vh)] lg:px-2">
               <ProjectChatTab
                 projectId={project.id}
                 sender={user}
@@ -82,7 +82,7 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
             </div>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="mt-4 w-full flex "
+              className="mt-4 w-full flex"
             >
               <label className="input input-bordered input-primary flex flex-row gap-2 flex-1">
                 <input
@@ -91,10 +91,9 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
                   placeholder="Send a message..."
                   {...register("message")}
                 />
-
                 <button
                   type="submit"
-                  className="btn btn-ghost self-end  text-primary"
+                  className="btn btn-ghost self-end text-primary"
                 >
                   <Icon path={mdiMessageArrowRightOutline} size={1} />
                 </button>
