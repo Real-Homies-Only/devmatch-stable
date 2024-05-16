@@ -40,11 +40,13 @@ const ProjectPage = () => {
 
   return (
     <Fragment>
-      {user &&
-        project &&
-        (user.id === project.clientId || user.id === project.developerId) && (
-          <Dashboard project={project} />
-        )}
+      <div>
+        {user &&
+          project &&
+          (user.id === project.clientId || user.id === project.developerId) && (
+            <Dashboard project={project} />
+          )}
+      </div>
     </Fragment>
   );
 };

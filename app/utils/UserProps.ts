@@ -21,7 +21,7 @@ export interface UserInterface {
   bio: string;
   location: string;
   userType: string;
-  isAdmin: string;
+  isAdmin: boolean;
 }
 
 export interface AuthProps {

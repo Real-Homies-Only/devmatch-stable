@@ -16,7 +16,7 @@ export async function GET(
       const idString = params.id;
       const projects = await prisma.projects.findMany({
         where: {
-          clientId: idString
+          OR: [{ clientId: idString }, { developerId: idString }]
         }
       });
       if (projects.length === 0) {
