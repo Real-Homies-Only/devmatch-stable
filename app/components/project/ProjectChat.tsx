@@ -1,3 +1,4 @@
+"use client";
 import { Body } from "@/app/fonts/roboto";
 import { ProjectType } from "@/app/utils/ProjectProps";
 import { UserType } from "@/app/utils/UserProps";

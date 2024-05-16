@@ -1,7 +1,7 @@
 "use client";
 import { MessagesType } from "@/app/utils/MessagesProps";
 import { UserType } from "@/app/utils/UserProps";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { supabase } from "@/app/utils/supabase";
 import Image from "next/image";
 
@@ -17,6 +17,7 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
   projectId
 }) => {
   const [messages, setMessages] = useState<MessagesType[]>([]);
+  const chatDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -49,15 +50,26 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
         }
       )
       .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
   }, [projectId]);
 
+  useEffect(() => {
+    const chatDiv = chatDivRef.current;
+    if (chatDiv) {
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <Fragment>
       {sender && receiver ? (
-        <Fragment>
+        <div
+          ref={chatDivRef}
+          className="flex-grow overflow-y-auto max-h-[calc(50vh)] lg:px-2"
+        >
           {messages ? (
             messages.map((message, index) =>
               message.senderId === sender.id ? (
@@ -111,7 +123,7 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
           ) : (
             <div>No messages sent!</div>
           )}
-        </Fragment>
+        </div>
       ) : (
         <div>Users dont exist!</div>
       )}
