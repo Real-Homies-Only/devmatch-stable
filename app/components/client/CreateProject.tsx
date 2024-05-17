@@ -37,6 +37,13 @@ const CreateProject: React.FC = () => {
       console.error("Please Register First!");
       return;
     }
+
+    if (user.userType !== "Client") {
+      setModalMessage("Only clients can create projects");
+      setIsModalOpen(true);
+      return;
+    }
+
     const categoryValue = getCategoryName(data.category);
 
     try {
@@ -199,14 +206,16 @@ const CreateProject: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between">
-              <button type="submit" className="btn btn-primary">
-                <Icon
-                  path={mdiContentSave}
-                  size={0.8}
-                  className="inline-block mr-2"
-                />
-                Submit
-              </button>
+              {user && user.userType === "Client" && (
+                <button type="submit" className="btn btn-primary">
+                  <Icon
+                    path={mdiContentSave}
+                    size={0.8}
+                    className="inline-block mr-2"
+                  />
+                  Submit
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-secondary"
