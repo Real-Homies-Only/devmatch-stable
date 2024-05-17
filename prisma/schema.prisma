@@ -17,22 +17,25 @@ model Users {
   isAdmin        Boolean    @default(false)
   displayName    String
   user           Bids[]
+  Messages       Messages[]
   client         Projects[] @relation("Client")
   developer      Projects[] @relation("Developer")
 }
 
 model Projects {
-  id          String  @id @unique @default(cuid()) @db.VarChar(32)
-  projectName String
-  category    String
-  language    String
-  description String
-  clientId    String
-  developerId String?
-  bid         Bids[]
-  client      Users   @relation("Client", fields: [clientId], references: [id])
-  developer   Users?  @relation("Developer", fields: [developerId], references: [id])
-}                 
+  id             String  @id @unique @default(cuid()) @db.VarChar(32)
+  projectName    String
+  category       String
+  language       String
+  description    String
+  clientId       String
+  developerId    String?
+  projectPicture String?  @default("defaultPhoto.png")
+  bid            Bids[]
+  client         Users   @relation("Client", fields: [clientId], references: [id])
+  developer      Users?  @relation("Developer", fields: [developerId], references: [id])
+  Task           Task[]
+}
 
 model Bids {
   id         String   @id @unique @default(cuid()) @db.VarChar(32)
@@ -41,4 +44,34 @@ model Bids {
   userId     String
   project    Projects @relation(fields: [projectId], references: [id])
   user       Users    @relation(fields: [userId], references: [id])
+}
+
+model Messages {
+  id        String      @id @unique @db.VarChar(32)
+  content   String
+  type      MessageType
+  projectId String
+  senderId  String
+  sentTime  DateTime    @default(now())
+  Users     Users       @relation(fields: [senderId], references: [id])
+}
+
+model Task {
+  id        String   @id
+  projectId String
+  column    Column
+  title     String
+  Projects  Projects @relation(fields: [projectId], references: [id])
+}
+
+enum Column {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum MessageType {
+  text
+  photo
 }

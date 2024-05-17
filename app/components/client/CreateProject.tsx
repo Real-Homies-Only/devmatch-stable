@@ -30,6 +30,7 @@ const CreateProject: React.FC = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
 
   const onSubmit = async (data: FormData) => {
@@ -45,18 +46,20 @@ const CreateProject: React.FC = () => {
     }
 
     const categoryValue = getCategoryName(data.category);
-
     try {
+      const formData = new FormData();
+      formData.append("projectName", data.projectName);
+      formData.append("category", categoryValue);
+      formData.append("language", data.language || "");
+      formData.append("description", data.description || "");
+      if (selectedFile) {
+        formData.append("photo", selectedFile);
+      }
+      formData.append("clientId", user.id);
+
       const response = await fetch("/api/project", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ...data,
-          category: categoryValue,
-          clientId: user.id
-        })
+        body: formData
       });
 
       if (response.ok) {
@@ -129,6 +132,21 @@ const CreateProject: React.FC = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="bg-white border border-black shadow-md rounded px-8 pt-6 pb-8 mb-4"
           >
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="photo"
+              >
+                Photo
+              </label>
+              <input
+                id="photo"
+                type="file"
+                accept="image/*"
+                className="input input-bordered w-full pt-2"
+                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              />
+            </div>
             <div className="mb-4">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"

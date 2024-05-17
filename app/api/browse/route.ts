@@ -11,7 +11,7 @@ export async function GET(): Promise<NextResponse> {
         description: true,
         client: {
           select: {
-            username: true
+            displayName: true
           }
         }
       }
