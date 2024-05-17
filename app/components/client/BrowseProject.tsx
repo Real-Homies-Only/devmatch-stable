@@ -21,7 +21,7 @@ const BrowseProject = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("/api/browse/");
+        const response = await fetch("api/browse/${id}");
 
         const data = await response.json();
         console.log(data);
