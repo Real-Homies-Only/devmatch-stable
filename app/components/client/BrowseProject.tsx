@@ -7,6 +7,7 @@ interface Project {
   category: string;
   language: string;
   description: string;
+  projectPicture: string;
   client: { displayName: string };
 }
 
@@ -21,7 +22,9 @@ const BrowseProject = () => {
     const fetchProjects = async () => {
       try {
         const response = await fetch("/api/browse/");
+
         const data = await response.json();
+        console.log(data);
         if (Array.isArray(data)) {
           setProjects(data);
         } else {
@@ -64,6 +67,11 @@ const BrowseProject = () => {
               className="w-64 h-64 bg-white shadow-md rounded p-4"
               onClick={() => handleProjectClick(project)}
             >
+              <img
+                src={project.projectPicture}
+                alt={project.projectName}
+                className="w-full h-32 object-cover mb-2"
+              />
               <h2 className="text-lg font-bold">{project.projectName}</h2>
               <p className="text-sm">{project.client.displayName}</p>
               <p className="text-sm ">{project.category}</p>
@@ -95,7 +103,12 @@ const BrowseProject = () => {
             className="modal"
             open={selectedProject !== null}
           >
-            <div className="modal-box ">
+            <div className="modal-box">
+              <img
+                src={selectedProject.projectPicture}
+                alt={selectedProject.projectName}
+                className="w-full h-64 object-cover mb-4"
+              />
               <h3 className="font-bold text-lg text-center">
                 {selectedProject.projectName}
               </h3>
@@ -113,7 +126,7 @@ const BrowseProject = () => {
                 <p className="text-sm font-bold">Language Used:</p>
                 <p>{selectedProject.language}</p>
                 <p className="pt-2 font-bold">Description:</p>
-                <p>{selectedProject.description}</p>
+                <p className="break-words">{selectedProject.description}</p>
                 <button className="btn btn-sm" onClick={handleModalClose}>
                   Close
                 </button>
