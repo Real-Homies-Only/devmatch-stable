@@ -1,10 +1,32 @@
 import { prisma } from "@/app/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserDataWithId } from "@/app/utils/getUserDataWithId";
+import crypto from "crypto";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import sharp from "sharp";
+
+const bucketName = process.env.BUCKET_NAME || "";
+const bucketRegion = process.env.BUCKET_REGION || "";
+const accessKey = process.env.AWS_ACCESS_KEY || "";
+const secretKey = process.env.AWS_SECRET_KEY || "";
+
+const bucket: S3Client = new S3Client({
+  region: bucketRegion,
+  credentials: {
+    secretAccessKey: secretKey,
+    accessKeyId: accessKey
+  }
+});
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { clientId, ...projectData } = await req.json();
+    const formData = await req.formData();
+    const clientId = formData.get("clientId")?.toString();
+    const projectName = formData.get("projectName")?.toString() ?? "";
+    const category = formData.get("category")?.toString() ?? "";
+    const language = formData.get("language")?.toString() ?? "";
+    const description = formData.get("description")?.toString() ?? "";
+    const photo = formData.get("photo");
 
     if (!clientId) {
       return NextResponse.json(
@@ -25,17 +47,52 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const newProject = await prisma.projects.create({
-      data: {
-        projectName: projectData.projectName,
-        category: projectData.category,
-        language: projectData.language,
-        description: projectData.description,
-        clientId: clientId
-      }
-    });
+    if (photo === null) {
+      return NextResponse.json({ error: "No photo provided" }, { status: 400 });
+    } else if (photo instanceof File) {
+      const photoBuffer = await photo.arrayBuffer();
 
-    return NextResponse.json(newProject, { status: 201 });
+      const resizedBuffer = await sharp(Buffer.from(photoBuffer))
+        .resize(480, 480, { fit: "cover", position: "center" })
+        .png()
+        .toBuffer();
+
+      const randomKey = crypto.randomBytes(32).toString("hex");
+      const bucketParams = {
+        Bucket: bucketName,
+        Key: `${randomKey}`,
+        Body: resizedBuffer,
+        ContentType: "image/png"
+      };
+
+      const uploadToBucket = new PutObjectCommand(bucketParams);
+      await bucket.send(uploadToBucket);
+
+      const newProject = await prisma.projects.create({
+        data: {
+          projectName,
+          category,
+          language,
+          description,
+          clientId,
+          projectPicture: `${randomKey}`
+        }
+      });
+
+      return NextResponse.json(newProject, { status: 201 });
+    } else {
+      const newProject = await prisma.projects.create({
+        data: {
+          projectName,
+          category,
+          language,
+          description,
+          clientId
+        }
+      });
+
+      return NextResponse.json(newProject, { status: 201 });
+    }
   } catch (error) {
     console.error("Error creating project:", error);
     return NextResponse.json(
