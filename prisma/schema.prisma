@@ -31,6 +31,7 @@ model Projects {
   clientId    String
   developerId String?
   bid         Bids[]
+  task        Task[]
   client      Users   @relation("Client", fields: [clientId], references: [id])
   developer   Users?  @relation("Developer", fields: [developerId], references: [id])
 }
@@ -52,6 +53,21 @@ model Messages {
   senderId  String
   sentTime  DateTime    @default(now())
   sender    Users       @relation(fields: [senderId], references: [id])
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  projectId String
+  column    Column
+  title     String
+  project   Projects @relation(fields: [projectId], references: [id])
+}
+
+enum Column {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  DONE
 }
 
 enum MessageType {
