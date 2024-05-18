@@ -71,7 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
                   otherUser={otherUser}
                 />
               ) : selected === 3 ? (
-                <ProjectKanban />
+                <ProjectKanban project={project} user={user} />
               ) : (
                 <div></div>
               )}
