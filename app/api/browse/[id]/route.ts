@@ -19,6 +19,11 @@ const s3Client = new S3Client({
 export async function GET(): Promise<NextResponse> {
   try {
     const projects = await prisma.projects.findMany({
+      where: {
+        developerId: {
+          equals: null
+        }
+      },
       select: {
         id: true,
         projectName: true,
