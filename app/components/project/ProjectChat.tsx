@@ -58,7 +58,7 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
     <Fragment>
       {user && otherUser ? (
         <div
-          className={`${Body.className} artboard phone-2 lg:phone-3 gap-2 border-gray-400 border flex flex-col flex-1 h-full w-full lg:mx-12 mx-4 lg:py-8 pt-4 mt-4 shadow-md`}
+          className={`${Body.className} artboard phone-1 lg:phone-3 gap-2 border-gray-400 border flex flex-col flex-1 h-full w-full lg:mx-12 mx-4 lg:py-8 pt-4 mt-4 shadow-md`}
         >
           <div className="self-center text-letter text-center border-b border-gray-400 ">
             <div className="flex flex-col mb-2">
