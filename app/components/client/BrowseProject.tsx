@@ -1,5 +1,7 @@
 "use client";
 import { AuthContext } from "@/app/context/AuthContext";
+import { Body, Headings } from "@/app/fonts/roboto";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef, useContext } from "react";
 
@@ -70,24 +72,40 @@ const BrowseProject = () => {
         ref={projectsContainerRef}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"
       >
-        {Array.isArray(currentProjects) &&
+        {currentProjects.length === 0 ? (
+          <div className={`${Body.className}`}>
+            Woops, there are no current projects!
+          </div>
+        ) : (
+          Array.isArray(currentProjects) &&
           currentProjects.map((project) => (
             <div
               key={project.id}
-              className="w-64 h-64 bg-white shadow-md rounded p-4"
+              className="w-64 h-64 bg-white shadow-md rounded border border-primary p-4"
               onClick={() => handleProjectClick(project)}
             >
-              <img
+              <Image
+                width={1280}
+                height={720}
                 src={project.projectPicture}
                 alt={project.projectName}
-                className="w-full h-32 object-cover mb-2"
+                className="w-full rounded-md h-32 object-cover mb-2"
               />
-              <h2 className="text-lg font-bold">{project.projectName}</h2>
-              <p className="text-sm">{project.client.displayName}</p>
-              <p className="text-sm ">{project.category}</p>
-              <p className="text-sm">{project.language}</p>
+              <h2 className={`${Headings.className} text-lg font-bold`}>
+                {project.projectName}
+              </h2>
+              <p className={`${Body.className} text-sm`}>
+                by {project.client.displayName}
+              </p>
+              <p className={`${Body.className} text-sm`}>
+                Category: {project.category}
+              </p>
+              <p className={`${Body.className} text-sm`}>
+                Language: {project.language}
+              </p>
             </div>
-          ))}
+          ))
+        )}
       </div>
       <div className="btn-group mt-auto mb-6">
         <button
@@ -113,16 +131,20 @@ const BrowseProject = () => {
             className="modal"
             open={selectedProject !== null}
           >
-            <div className="modal-box">
-              <img
+            <div className="modal-box border border-primary">
+              <Image
+                width={1280}
+                height={720}
                 src={selectedProject.projectPicture}
                 alt={selectedProject.projectName}
                 className="w-full h-64 object-cover mb-4"
               />
-              <h3 className="font-bold text-lg text-center">
+              <h3
+                className={`${Headings.className} font-bold text-lg text-center`}
+              >
                 {selectedProject.projectName}
               </h3>
-              <div className="px-4 pt-4">
+              <div className={`${Body.className} px-4 pt-4`}>
                 <div className="flex justify-between">
                   <div>
                     <p className="text-sm font-bold">Category:</p>
@@ -136,9 +158,11 @@ const BrowseProject = () => {
                 <p className="text-sm font-bold">Language Used:</p>
                 <p>{selectedProject.language}</p>
                 <p className="pt-2 font-bold">Description:</p>
-                <p className="break-words">{selectedProject.description}</p>
+                <p className="break-words mb-4">
+                  {selectedProject.description}
+                </p>
                 <button
-                  className="btn btn-sm float-right"
+                  className="btn btn-sm float-right border-primary"
                   onClick={() =>
                     router.push(
                       `/projects/bid?projectId=${selectedProject.id}&developerId=${user.id}`
@@ -147,7 +171,10 @@ const BrowseProject = () => {
                 >
                   Bid
                 </button>
-                <button className="btn btn-sm" onClick={handleModalClose}>
+                <button
+                  className="btn btn-sm border-primary"
+                  onClick={handleModalClose}
+                >
                   Close
                 </button>
               </div>
