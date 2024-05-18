@@ -30,7 +30,7 @@ model Projects {
   description    String
   clientId       String
   developerId    String?
-  projectPicture String?  @default("defaultPhoto.png")
+  projectPicture String? @default("defaultPhoto.png")
   bid            Bids[]
   client         Users   @relation("Client", fields: [clientId], references: [id])
   developer      Users?  @relation("Developer", fields: [developerId], references: [id])
@@ -47,7 +47,7 @@ model Bids {
 }
 
 model Messages {
-  id        String      @id @unique @db.VarChar(32)
+  id        String      @id @unique @default(cuid()) @db.VarChar(32)
   content   String
   type      MessageType
   projectId String
@@ -57,7 +57,7 @@ model Messages {
 }
 
 model Task {
-  id        String   @id
+  id        String   @id @unique @default(cuid()) @db.VarChar(32)
   projectId String
   column    Column
   title     String

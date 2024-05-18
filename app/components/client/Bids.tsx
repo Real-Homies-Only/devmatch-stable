@@ -1,26 +1,18 @@
 "use client";
 import { Body, Headings } from "@/app/fonts/roboto";
+import { BidType } from "@/app/utils/BidProps";
 import { ProjectType } from "@/app/utils/ProjectProps";
+import { supabase } from "@/app/utils/supabase";
 import { UserType } from "@/app/utils/UserProps";
 import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
-
-interface Bid {
-  id: string;
-  bidComment: string;
-  projectId: string;
-  userId: string;
-  userProfilePic: string;
-  userUsername: string;
-  userDisplayName: string;
-}
 
 interface BidsProps {
   project: ProjectType | null;
   client: UserType | null;
 }
 const Bids: React.FC<BidsProps> = ({ project, client }) => {
-  const [bids, setBids] = useState<Bid[]>([]);
+  const [bids, setBids] = useState<BidType[]>([]);
   const [bidsLoading, setBidsLoading] = useState(true);
 
   useEffect(() => {
@@ -38,6 +30,26 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
       }
     };
     getBids();
+
+    const channel = supabase
+      .channel(`bidding-room`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "Bids"
+        },
+        (payload) => {
+          const newBid = payload.new as BidType;
+
+          setBids((prevBids) => [...prevBids, newBid]);
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [project, client]);
 
   const handleAcceptBid = async (userId: string) => {
