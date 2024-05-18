@@ -1,10 +1,15 @@
 "use client";
 import { Body, Headings } from "@/app/fonts/roboto";
+import { mdiArrowLeft } from "@mdi/js";
+import Icon from "@mdi/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import Modal from "react-modal";
 
 const BidForm: React.FC = () => {
   const [bidComment, setBidComment] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const params = useSearchParams();
   const projectId = params.get("projectId");
   const developerId = params.get("developerId");
@@ -24,20 +29,50 @@ const BidForm: React.FC = () => {
       });
 
       if (response.ok) {
-        alert("Bid submitted successfully!");
+        setModalMessage("Bid submitted successfully!");
+        setIsModalOpen(true);
         setBidComment("");
-        router.push("/");
       } else {
-        alert("Error submitting bid.");
+        const { message } = await response.json();
+        if (message) {
+          setModalMessage(message);
+        }
+
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error("Error submitting bid:", error);
-      alert("Error submitting bid.");
+      setModalMessage("Error submitting bid.");
+      setIsModalOpen(true);
     }
   };
 
   return (
     <div className={`${Body.className} p-4 border border-gray-300 rounded-lg`}>
+      <Modal
+        isOpen={isModalOpen}
+        contentLabel="Bid REsult"
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+        appElement={document.getElementById("root") || undefined}
+      >
+        <div className="bg-white p-6 rounded-md shadow-md z-50">
+          <h2 className="text-xl font-bold mb-4">{modalMessage}</h2>
+          <div className="flex justify-end">
+            <button
+              className="btn btn-primary flex items-center"
+              onClick={() => router.push("/")}
+            >
+              <Icon
+                path={mdiArrowLeft}
+                size={0.8}
+                className="inline-block mr-2"
+              />
+              Back to Home
+            </button>
+          </div>
+        </div>
+      </Modal>
       <div className={`${Headings.className} text-xl mb-2`}>Submit a Bid</div>
       <form onSubmit={handleSubmit}>
         <textarea
