@@ -1,5 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef, useContext } from "react";
 
 interface Project {
   id: string;
@@ -12,6 +14,8 @@ interface Project {
 }
 
 const BrowseProject = () => {
+  const { user, loading } = useContext(AuthContext);
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,6 +57,12 @@ const BrowseProject = () => {
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  if (loading) {
+    return (
+      <span className="loading loading-spinner loading-lg self-center justify-center"></span>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center min-h-screen relative pt-6">
@@ -96,7 +106,7 @@ const BrowseProject = () => {
           Next &raquo;
         </button>
       </div>
-      {selectedProject && (
+      {selectedProject && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <dialog
             id="my_modal_3"
@@ -127,6 +137,16 @@ const BrowseProject = () => {
                 <p>{selectedProject.language}</p>
                 <p className="pt-2 font-bold">Description:</p>
                 <p className="break-words">{selectedProject.description}</p>
+                <button
+                  className="btn btn-sm float-right"
+                  onClick={() =>
+                    router.push(
+                      `/projects/bid?projectId=${selectedProject.id}&developerId=${user.id}`
+                    )
+                  }
+                >
+                  Bid
+                </button>
                 <button className="btn btn-sm" onClick={handleModalClose}>
                   Close
                 </button>
