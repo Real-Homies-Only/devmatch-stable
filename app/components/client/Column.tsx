@@ -14,62 +14,66 @@ const Column: React.FC<ColumnProps> = ({
   setTasks
 }) => {
   const [active, setActive] = useState(false);
-  const handleDragStart = (e: DragEvent, task: TaskType) => {
-    e.dataTransfer.setData("taskId", task.id);
+  const handleDragStart = (e: any, task: TaskType) => {
+    if (e.dataTransfer) {
+      e.dataTransfer.setData("taskId", task.id);
+    }
   };
 
-  const handleDragEnd = async (e: DragEvent) => {
+  const handleDragEnd = async (e: any) => {
     if (userType === "Client") {
       clearHighlights();
       return;
     }
-    const taskId = e.dataTransfer.getData("taskId");
+    if (e.dataTransfer) {
+      const taskId = e.dataTransfer.getData("taskId");
 
-    setActive(false);
-    clearHighlights();
+      setActive(false);
+      clearHighlights();
 
-    const indicators = getIndicators();
-    const { element } = getNearestIndicator(e, indicators);
+      const indicators = getIndicators();
+      const { element } = getNearestIndicator(e, indicators);
 
-    const before = element.dataset.before || "-1";
+      const before = element.dataset.before || "-1";
 
-    if (before !== taskId) {
-      let copy = [...tasks];
+      if (before !== taskId) {
+        let copy = [...tasks];
 
-      let taskToTransfer = copy.find((c) => c.id === taskId);
-      if (!taskToTransfer) return;
-      taskToTransfer = { ...taskToTransfer, column };
+        let taskToTransfer = copy.find((c) => c.id === taskId);
+        if (!taskToTransfer) return;
+        taskToTransfer = { ...taskToTransfer, column };
 
-      copy = copy.filter((c) => c.id !== taskId);
+        copy = copy.filter((c) => c.id !== taskId);
 
-      const moveToBack = before === "-1";
+        const moveToBack = before === "-1";
 
-      if (moveToBack) {
-        copy.push(taskToTransfer);
-      } else {
-        const insertAtIndex = copy.findIndex((el) => el.id === before);
-        if (insertAtIndex === undefined) return;
+        if (moveToBack) {
+          copy.push(taskToTransfer);
+        } else {
+          const insertAtIndex = copy.findIndex((el) => el.id === before);
+          if (insertAtIndex === undefined) return;
 
-        copy.splice(insertAtIndex, 0, taskToTransfer);
+          copy.splice(insertAtIndex, 0, taskToTransfer);
+        }
+
+        const response = await fetch(`/api/project/${projectId}/kanban`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: taskToTransfer.id,
+            column: taskToTransfer.column,
+            title: taskToTransfer.title
+          })
+        });
+        const data = await response.json();
+        setTasks(copy.map((c) => (c.id === data.id ? data : c)));
       }
-
-      const response = await fetch(`/api/project/${projectId}/kanban`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          id: taskToTransfer.id,
-          column: taskToTransfer.column,
-          title: taskToTransfer.title
-        })
-      });
-      const data = await response.json();
-      setTasks(copy.map((c) => (c.id === data.id ? data : c)));
     }
   };
 
-  const handleDragOver = (e: DragEvent) => {
+  const handleDragOver = (e: any) => {
     if (userType === "Client") return;
     e.preventDefault();
     highlightIndicator(e);
