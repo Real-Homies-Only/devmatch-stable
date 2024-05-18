@@ -45,35 +45,39 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(true);
-      if (currentUser) {
-        const response = await fetch(`/api/user/${currentUser.uid}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        });
-        const { user } = await response.json();
+      try {
+        setLoading(true);
+        if (currentUser) {
+          const response = await fetch(`/api/user/${currentUser.uid}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+          });
+          const { user } = await response.json();
 
-        const userInfo = {
-          id: currentUser.uid,
-          displayName: user.displayName,
-          username: user.username,
-          profilePicture: user.profilePicture,
-          bio: user.bio,
-          location: user.location,
-          userType: user.userType,
-          isAdmin: user.isAdmin
-        };
+          const userInfo = {
+            id: currentUser.uid,
+            displayName: user.displayName,
+            username: user.username,
+            profilePicture: user.profilePicture,
+            bio: user.bio,
+            location: user.location,
+            userType: user.userType,
+            isAdmin: user.isAdmin
+          };
 
-        if (response.ok) {
-          setUser(userInfo);
+          if (response.ok) {
+            setUser(userInfo);
+          } else {
+            setUser(null);
+          }
         } else {
           setUser(null);
         }
-      } else {
+        setLoading(false);
+      } catch (err) {
         setUser(null);
-        console.log();
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
