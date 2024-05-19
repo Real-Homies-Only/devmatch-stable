@@ -119,6 +119,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
           className="btn btn-ghost btn-circle avatar dropdown dropdown-end z-10"
         >
           <div
+            id="account-button"
             className={`${Body.className} w-10 border-primary border z-10 rounded-full mt-1 shadow-md hover:border-secondary hover:border-2`}
           >
             <Image
@@ -136,6 +137,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
           >
             <li>
               <div
+                id="profile-button"
                 onClick={() => router.push("/profile")}
                 className="hover:bg-gray-100"
               >
@@ -147,7 +149,11 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
             </li>
 
             <li>
-              <div onClick={logout} className="hover:bg-gray-100">
+              <div
+                id="logout-button"
+                onClick={logout}
+                className="hover:bg-gray-100"
+              >
                 <a className="flex flex-row">
                   <Icon path={mdiDoorOpen} size={1} className="mr-2" />
                   <span>Sign Out</span>

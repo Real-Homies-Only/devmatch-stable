@@ -91,6 +91,7 @@ const LoginForm = () => {
         Join DevMatch
       </div>
       <form
+        id="login-form"
         onSubmit={handleSubmit(handleLogin)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
       >
@@ -98,6 +99,7 @@ const LoginForm = () => {
           <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
             <span className="border-r border-primary pr-2 text-sm">Email</span>
             <input
+              id="email"
               type="text"
               className="grow"
               placeholder="email@gmail.com"
@@ -117,6 +119,7 @@ const LoginForm = () => {
               Password
             </span>
             <input
+              id="password"
               type="password"
               className="grow"
               placeholder="******"
@@ -132,13 +135,14 @@ const LoginForm = () => {
         </div>
 
         {errorMessage && (
-          <div className="self-center">
+          <div id="error-message" className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
 
         <div className="flex flex-1 flex-row self-center gap-8 items-center">
           <button
+            id="submit"
             type="submit"
             className="btn btn-outline btn-primary self-start"
           >

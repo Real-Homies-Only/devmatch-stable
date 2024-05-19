@@ -7,12 +7,14 @@ const AccountButtons = () => {
   return (
     <Fragment>
       <div
+        id="login-button"
         onClick={() => router.push("/login")}
         className="btn btn-outline btn-secondary btn-sm"
       >
         Log In
       </div>
       <div
+        id="sign-up-button"
         onClick={() => router.push("/register")}
         className="btn btn-primary text-white btn-sm"
       >
