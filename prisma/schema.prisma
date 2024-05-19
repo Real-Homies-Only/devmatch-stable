@@ -31,6 +31,8 @@ model Projects {
   clientId       String
   developerId    String?
   projectPicture String? @default("defaultPhoto.png")
+  progress       Int     @default(0)
+  finished       Boolean @default(false)
   bid            Bids[]
   client         Users   @relation("Client", fields: [clientId], references: [id])
   developer      Users?  @relation("Developer", fields: [developerId], references: [id])
@@ -42,7 +44,7 @@ model Bids {
   bidComment String
   projectId  String
   userId     String
-  project    Projects @relation(fields: [projectId], references: [id])
+  project    Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user       Users    @relation(fields: [userId], references: [id])
 }
 
@@ -68,7 +70,7 @@ model Task {
   projectId String
   column    Column
   title     String
-  project   Projects @relation(fields: [projectId], references: [id])
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum MessageType {
