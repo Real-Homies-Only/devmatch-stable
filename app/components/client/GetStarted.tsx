@@ -9,6 +9,7 @@ const GetStarted = () => {
     <button
       onClick={() => router.push("/login")}
       className={`${Body.className} btn btn-primary hover:btn-secondary`}
+      id="get-started"
     >
       Get Started
     </button>
