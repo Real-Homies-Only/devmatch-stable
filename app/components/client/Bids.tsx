@@ -2,10 +2,13 @@
 import { Body, Headings } from "@/app/fonts/roboto";
 import { BidType } from "@/app/utils/BidProps";
 import { ProjectType } from "@/app/utils/ProjectProps";
-import { supabase } from "@/app/utils/supabase";
 import { UserType } from "@/app/utils/UserProps";
+import { mdiCheck, mdiFire } from "@mdi/js";
+import Icon from "@mdi/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { Fragment, useEffect, useState } from "react";
+import Modal from "react-modal";
 
 interface BidsProps {
   project: ProjectType | null;
@@ -14,6 +17,11 @@ interface BidsProps {
 const Bids: React.FC<BidsProps> = ({ project, client }) => {
   const [bids, setBids] = useState<BidType[]>([]);
   const [bidsLoading, setBidsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [developerId, setDeveloperId] = useState("");
+  const [acceptModal, setAcceptModal] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const getBids = async () => {
@@ -30,26 +38,6 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
       }
     };
     getBids();
-
-    const channel = supabase
-      .channel(`bidding-room`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "Bids"
-        },
-        (payload) => {
-          const newBid = payload.new as BidType;
-
-          setBids((prevBids) => [...prevBids, newBid]);
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [project, client]);
 
   const handleAcceptBid = async (userId: string) => {
@@ -67,12 +55,64 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
     }
   };
 
+  const handleDeleteProject = async (projectId: string) => {
+    const response = await fetch(`/api/project/${projectId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
+    if (response.ok) {
+      router.push("/");
+    } else {
+      alert("Error deleting project.");
+    }
+  };
+
   return (
     <Fragment>
+      <Modal
+        isOpen={isModalOpen}
+        contentLabel="Project Creation Result"
+        className="fixed inset-0 z-50 flex items-center justify-center mx-4"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+        appElement={document.getElementById("root") || undefined}
+      >
+        <div className="bg-white p-6 rounded-md shadow-md z-50">
+          <h2 className="text-xl mb-4">{modalMessage}</h2>
+          <div className="flex justify-end">
+            {acceptModal ? (
+              <button
+                className="btn btn-primary flex items-center"
+                onClick={() => handleAcceptBid(developerId)}
+              >
+                <Icon
+                  path={mdiCheck}
+                  size={0.8}
+                  className="inline-block mr-2"
+                />
+                Accept
+              </button>
+            ) : (
+              project && (
+                <button
+                  className="btn btn-primary flex items-center"
+                  onClick={() => handleDeleteProject(project.id)}
+                >
+                  <Icon
+                    path={mdiFire}
+                    size={0.8}
+                    className="inline-block mr-2"
+                  />
+                  Delete
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      </Modal>
       {project && (
         <div className="flex">
           <div
-            className={`${Body.className} artboard border-gray-400 border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 shadow-md`}
+            className={`${Body.className} artboard lg:border-primary lg:border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 lg:mt-4 lg:shadow-md`}
           >
             <div className="self-center text-letter text-center mx-4">
               <div className={`${Headings.className}`}>
@@ -92,7 +132,12 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
                     key={bid.id}
                     className="flex flex-row border border-gray-300 rounded-xl mt-4 gap-4 p-4"
                   >
-                    <div className="avatar">
+                    <div
+                      className="avatar"
+                      onClick={() =>
+                        router.push(`/profile/${bid.userUsername}`)
+                      }
+                    >
                       <div
                         className={`${Body.className} w-12 h-12 border-primary border z-10 rounded-full mt-1 shadow-md`}
                       >
@@ -118,7 +163,14 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
                         {bid.bidComment}
                       </div>
                       <div
-                        onClick={() => handleAcceptBid(bid.userId)}
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setAcceptModal(true);
+                          setDeveloperId(bid.userId);
+                          setModalMessage(
+                            `Accept bid from ${bid.userDisplayName}?`
+                          );
+                        }}
                         className="self-end mt-2"
                       >
                         <button className={`btn btn-accent ${Body.className}`}>
@@ -131,6 +183,18 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
               ) : (
                 <div className="mt-4">No bids yet.</div>
               )}
+              <div
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setAcceptModal(false);
+                  setModalMessage(`Delete your project?`);
+                }}
+                className="self-end mt-4"
+              >
+                <button className={`btn bg-red-500 ${Body.className}`}>
+                  Delete Project
+                </button>
+              </div>
             </div>
           </div>
         </div>

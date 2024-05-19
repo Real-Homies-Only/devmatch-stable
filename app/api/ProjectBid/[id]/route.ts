@@ -13,6 +13,20 @@ export async function POST(
       throw new Error("ID params not found!");
     } else {
       const idString = params.id;
+
+      const existingBid = await prisma.bids.findFirst({
+        where: {
+          userId: userId
+        }
+      });
+
+      if (existingBid) {
+        return NextResponse.json(
+          { message: "You already have a bid on this project!" },
+          { status: 401 }
+        );
+      }
+
       const bid = await prisma.bids.create({
         data: {
           bidComment,

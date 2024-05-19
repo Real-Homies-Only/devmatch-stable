@@ -57,7 +57,7 @@ const LoginForm = () => {
   }
 
   if (user) {
-    router.back();
+    router.push("/");
     return <div></div>;
   }
 

@@ -58,9 +58,9 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
     <Fragment>
       {user && otherUser ? (
         <div
-          className={`${Body.className} artboard phone-2 lg:phone-3 gap-2 border-gray-400 border flex flex-col flex-1 h-full w-full lg:mx-12 mx-4 lg:py-8 pt-4 mt-4 shadow-md`}
+          className={`${Body.className} artboard phone-1 lg:phone-3 gap-2 lg:border-primary lg:border flex flex-col flex-1 h-full w-full lg:mx-12 mx-4 lg:py-8 pt-4 mt-4 lg:shadow-md`}
         >
-          <div className="self-center text-letter text-center border-b border-gray-400 ">
+          <div className="self-center text-letter text-center border-b lg:border-gray-400 ">
             <div className="flex flex-col mb-2">
               <div className="text-2xl ">Chat for: {project.projectName}</div>
               <div className="text-gray-400 text-sm">
@@ -73,7 +73,7 @@ const ProjectChat: React.FC<ProjectChatProps> = ({
               )}
             </div>
           </div>
-          <div className="grid grid-rows-[1fr_auto] h-full lg:border border-gray-500 lg:mx-12 mb-2 rounded-md p-4">
+          <div className="grid grid-rows-[1fr_auto] h-full lg:border border-primary lg:mx-12 mb-2 rounded-md p-4">
             <div className="flex-grow overflow-y-auto max-h-[calc(50vh)] lg:px-2">
               <ProjectChatTab
                 projectId={project.id}

@@ -7,7 +7,10 @@ export const ProjectSchema = z.object({
   language: z.string(),
   description: z.string(),
   clientId: z.string(),
-  developerId: z.string()
+  developerId: z.string(),
+  projectPicture: z.string(),
+  progress: z.number(),
+  finished: z.boolean()
 });
 
 export type ProjectType = z.infer<typeof ProjectSchema>;
@@ -20,6 +23,9 @@ export interface ProjectInterface {
   description: string;
   clientId: string;
   developerId: string;
+  projectPicture: string;
+  progress: number;
+  finished: boolean;
 }
 
 export interface ProjectProps {

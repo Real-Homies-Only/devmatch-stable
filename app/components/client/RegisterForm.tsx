@@ -79,7 +79,7 @@ const RegisterForm = () => {
   }
 
   if (user) {
-    router.back();
+    router.push("/");
     return <div></div>;
   }
 
@@ -106,7 +106,7 @@ const RegisterForm = () => {
         <div
           className={`flex flex-col gap-4 items-center ${Headings.className}`}
         >
-          <span className="text-xl text-primary">
+          <span className="text-xl text-white">
             Registered user! Redirecting to home page...
           </span>
           <span className="loading loading-spinner text-primary loading-lg" />

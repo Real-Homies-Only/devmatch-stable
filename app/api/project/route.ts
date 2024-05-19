@@ -53,7 +53,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const photoBuffer = await photo.arrayBuffer();
 
       const resizedBuffer = await sharp(Buffer.from(photoBuffer))
-        .resize(480, 480, { fit: "cover", position: "center" })
+        .resize(1280, 720, { fit: "contain", position: "center" })
         .png()
         .toBuffer();
 
