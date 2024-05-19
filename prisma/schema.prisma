@@ -17,22 +17,26 @@ model Users {
   isAdmin        Boolean    @default(false)
   displayName    String
   user           Bids[]
-  sender         Messages[]
+  Messages       Messages[]
   client         Projects[] @relation("Client")
   developer      Projects[] @relation("Developer")
 }
 
 model Projects {
-  id          String  @id @unique @default(cuid()) @db.VarChar(32)
-  projectName String
-  category    String
-  language    String
-  description String
-  clientId    String
-  developerId String?
-  bid         Bids[]
-  client      Users   @relation("Client", fields: [clientId], references: [id])
-  developer   Users?  @relation("Developer", fields: [developerId], references: [id])
+  id             String  @id @unique @default(cuid()) @db.VarChar(32)
+  projectName    String
+  category       String
+  language       String
+  description    String
+  clientId       String
+  developerId    String?
+  projectPicture String? @default("defaultPhoto.png")
+  progress       Int     @default(0)
+  finished       Boolean @default(false)
+  bid            Bids[]
+  client         Users   @relation("Client", fields: [clientId], references: [id])
+  developer      Users?  @relation("Developer", fields: [developerId], references: [id])
+  Task           Task[]
 }
 
 model Bids {
@@ -40,7 +44,7 @@ model Bids {
   bidComment String
   projectId  String
   userId     String
-  project    Projects @relation(fields: [projectId], references: [id])
+  project    Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user       Users    @relation(fields: [userId], references: [id])
 }
 
@@ -51,7 +55,22 @@ model Messages {
   projectId String
   senderId  String
   sentTime  DateTime    @default(now())
-  sender    Users       @relation(fields: [senderId], references: [id])
+  Users     Users       @relation(fields: [senderId], references: [id])
+}
+
+enum Column {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  projectId String
+  column    Column
+  title     String
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum MessageType {

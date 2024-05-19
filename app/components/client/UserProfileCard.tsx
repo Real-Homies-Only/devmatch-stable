@@ -59,7 +59,7 @@ const UserProfileCard: React.FC = () => {
       {user ? (
         <div className="flex ">
           <div
-            className={`${Body.className} artboard gap-2 border-letter border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 shadow-md`}
+            className={`${Body.className} artboard gap-2 border-letter lg:border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 lg:shadow-md`}
           >
             <div className="avatar self-center">
               <div

@@ -4,6 +4,7 @@ import { UserType } from "@/app/utils/UserProps";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { supabase } from "@/app/utils/supabase";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ProjectChatTabProps {
   sender: UserType;
@@ -18,6 +19,7 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
 }) => {
   const [messages, setMessages] = useState<MessagesType[]>([]);
   const chatDivRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -74,7 +76,10 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
             messages.map((message, index) =>
               message.senderId === sender.id ? (
                 <div className={`chat chat-end `} key={index}>
-                  <div className="chat-image avatar flex items-start justify-start">
+                  <div
+                    className="chat-image avatar flex items-start justify-start"
+                    onClick={() => router.push(`/profile/${sender.username}`)}
+                  >
                     <div className="w-10 rounded-full">
                       <Image
                         className=""
@@ -97,7 +102,10 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
                 </div>
               ) : (
                 <div className={`chat chat-start`} key={index}>
-                  <div className="chat-image avatar">
+                  <div
+                    className="chat-image avatar"
+                    onClick={() => router.push(`/profile/${receiver.username}`)}
+                  >
                     <div className="w-10 rounded-full">
                       <Image
                         className=""
