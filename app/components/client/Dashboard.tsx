@@ -9,6 +9,7 @@ import ProjectChat from "../project/ProjectChat";
 import ProjectKanban from "../project/ProjectKanban";
 import Bids from "./Bids";
 import { AuthContext } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface DashboardProps {
   project: ProjectType;
@@ -18,6 +19,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
   const [otherUser, setOtherUser] = useState<UserType | null>(null);
   const [selected, setSelected] = useState(1);
   const { user, loading } = useContext(AuthContext);
+  const router = useRouter();
 
   const handleSelect = (selected: number) => {
     setSelected(selected);
@@ -49,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
 
       getOtherUserId();
     }
-  }, []);
+  }, [otherUser, user, project, router]);
 
   if (loading) {
     return (
