@@ -227,7 +227,7 @@ const RegisterForm = () => {
           )}
         </div>
         {errorMessage && (
-          <div className="self-center">
+          <div id="error-message" className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
