@@ -24,6 +24,10 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
   };
 
   useEffect(() => {
+    if (project.finished === true) {
+      router.push("/");
+    }
+
     if (user) {
       let otherUserId;
 
@@ -63,6 +67,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
                 <ProjectHome
                   project={project}
                   client={user.userType === "Client" ? user : otherUser}
+                  user={user}
                 />
               ) : selected === 2 ? (
                 <ProjectChat
@@ -76,7 +81,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
                 <div></div>
               )}
             </div>
-            <ul className="menu menu-horizontal border gap-1 border-gray-400 lg:mx-12 mx-4 items-center justify-center">
+            <ul className="menu menu-horizontal gap-1 border-primary border-t-0 lg:mx-12 mx-4 items-center justify-center lg:border-1 border-0">
               <ProjectMenu selected={selected} setSelected={handleSelect} />
             </ul>
           </div>
