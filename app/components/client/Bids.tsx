@@ -3,7 +3,7 @@ import { Body, Headings } from "@/app/fonts/roboto";
 import { BidType } from "@/app/utils/BidProps";
 import { ProjectType } from "@/app/utils/ProjectProps";
 import { UserType } from "@/app/utils/UserProps";
-import { mdiCheck } from "@mdi/js";
+import { mdiCheck, mdiFire } from "@mdi/js";
 import Icon from "@mdi/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [developerId, setDeveloperId] = useState("");
+  const [acceptModal, setAcceptModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +55,18 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
     }
   };
 
+  const handleDeleteProject = async (projectId: string) => {
+    const response = await fetch(`/api/project/${projectId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
+    if (response.ok) {
+      router.push("/");
+    } else {
+      alert("Error deleting project.");
+    }
+  };
+
   return (
     <Fragment>
       <Modal
@@ -66,13 +79,33 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
         <div className="bg-white p-6 rounded-md shadow-md z-50">
           <h2 className="text-xl mb-4">{modalMessage}</h2>
           <div className="flex justify-end">
-            <button
-              className="btn btn-primary flex items-center"
-              onClick={() => handleAcceptBid(developerId)}
-            >
-              <Icon path={mdiCheck} size={0.8} className="inline-block mr-2" />
-              Accept
-            </button>
+            {acceptModal ? (
+              <button
+                className="btn btn-primary flex items-center"
+                onClick={() => handleAcceptBid(developerId)}
+              >
+                <Icon
+                  path={mdiCheck}
+                  size={0.8}
+                  className="inline-block mr-2"
+                />
+                Accept
+              </button>
+            ) : (
+              project && (
+                <button
+                  className="btn btn-primary flex items-center"
+                  onClick={() => handleDeleteProject(project.id)}
+                >
+                  <Icon
+                    path={mdiFire}
+                    size={0.8}
+                    className="inline-block mr-2"
+                  />
+                  Delete
+                </button>
+              )
+            )}
           </div>
         </div>
       </Modal>
@@ -132,6 +165,7 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
                       <div
                         onClick={() => {
                           setIsModalOpen(true);
+                          setAcceptModal(true);
                           setDeveloperId(bid.userId);
                           setModalMessage(
                             `Accept bid from ${bid.userDisplayName}?`
@@ -149,6 +183,18 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
               ) : (
                 <div className="mt-4">No bids yet.</div>
               )}
+              <div
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setAcceptModal(false);
+                  setModalMessage(`Delete your project?`);
+                }}
+                className="self-end mt-4"
+              >
+                <button className={`btn bg-red-500 ${Body.className}`}>
+                  Delete Project
+                </button>
+              </div>
             </div>
           </div>
         </div>
