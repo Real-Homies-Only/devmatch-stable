@@ -52,11 +52,13 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
       <div className="flex flex-row">
         {userType === "Client" ? (
           <div
-            id="create-project-button"
             onClick={() => router.push("/projects/create")}
             className="btn btn-ghost btn-circle lg:w-36 hover:bg-gray-100"
           >
-            <div className="flex flex-row justify-center items-center gap-2">
+            <div
+              id="create-project-button"
+              className="flex flex-row justify-center items-center gap-2"
+            >
               <Icon path={mdiPencil} size={0.8} />
               <span className="lg:block hidden">Create Project</span>
             </div>

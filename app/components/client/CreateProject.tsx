@@ -66,6 +66,7 @@ const CreateProject: React.FC = () => {
         setModalMessage("Project created successfully");
         setIsModalOpen(true);
         reset();
+        router.push("/");
       } else {
         setModalMessage("Failed to create project");
         setIsModalOpen(true);
@@ -227,7 +228,11 @@ const CreateProject: React.FC = () => {
 
             <div className="flex items-center justify-between">
               {user && user.userType === "Client" && (
-                <button type="submit" className="btn btn-primary">
+                <button
+                  id="submit-button"
+                  type="submit"
+                  className="btn btn-primary"
+                >
                   <Icon
                     path={mdiContentSave}
                     size={0.8}
@@ -237,9 +242,10 @@ const CreateProject: React.FC = () => {
                 </button>
               )}
               <button
+                id="cancel"
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => history.back()}
+                onClick={() => router.push("/")}
               >
                 <Icon
                   path={mdiClose}
