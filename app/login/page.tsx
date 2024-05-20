@@ -1,8 +1,15 @@
 import React from "react";
-import LoginAuth from "../components/AuthProvider/LoginAuth";
+import { AuthProvider } from "../context/AuthContext";
+import LoginForm from "../components/client/LoginForm";
 
 const Login = () => {
-  return <LoginAuth />;
+  return (
+    <AuthProvider>
+      <div className="flex flex-1 items-center h-screen justify-center">
+        <LoginForm />
+      </div>
+    </AuthProvider>
+  );
 };
 
 export default Login;

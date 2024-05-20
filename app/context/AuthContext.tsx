@@ -7,17 +7,17 @@ import {
   createUserWithEmailAndPassword
 } from "firebase/auth";
 
-import { UserType } from "../utils/UserProps";
+import { UserInterface } from "../utils/UserProps";
 import { auth } from "../utils/firebaseConfig";
 
 interface AuthContextValue {
-  user: UserType | null;
+  user: UserInterface | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  loginWithEmail: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<boolean>;
-  signUp: (
-    firstname: string,
-    lastName: string,
+  signUpWithEmail: (
+    displayName: string,
+    username: string,
     userType: string,
     email: string,
     password: string
@@ -27,9 +27,10 @@ interface AuthContextValue {
 const defaultValue: AuthContextValue = {
   user: null,
   loading: true,
-  login: () => Promise.resolve(false),
+  loginWithEmail: () => Promise.resolve(false),
+
   logout: () => Promise.resolve(false),
-  signUp: () => Promise.resolve(false)
+  signUpWithEmail: () => Promise.resolve(false)
 };
 
 export const AuthContext = createContext<AuthContextValue>(defaultValue);
@@ -39,48 +40,68 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<UserInterface | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(true);
-      if (currentUser) {
-        const response = await fetch(`/api/user/${currentUser.uid}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        });
-        const { user } = await response.json();
+      try {
+        setLoading(true);
+        if (currentUser) {
+          const response = await fetch(`/api/user/${currentUser.uid}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+          });
+          const { user } = await response.json();
 
-        const userInfo = {
-          id: currentUser.uid,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profilePicture: user.profilePicture,
-          bio: user.bio,
-          location: user.location,
-          userType: user.userType,
-          isAdmin: user.isAdmin
-        };
+          const userInfo = {
+            id: currentUser.uid,
+            displayName: user.displayName,
+            username: user.username,
+            profilePicture: user.profilePicture,
+            bio: user.bio,
+            location: user.location,
+            userType: user.userType,
+            isAdmin: user.isAdmin
+          };
 
-        if (response.ok) {
-          setUser(userInfo);
+          if (response.ok) {
+            setUser(userInfo);
+          } else {
+            setUser(null);
+          }
         } else {
           setUser(null);
         }
-      } else {
+        setLoading(false);
+      } catch (err) {
         setUser(null);
-        console.log();
+        setLoading(false);
       }
-      setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const loginWithEmail = async (
+    email: string,
+    password: string
+  ): Promise<boolean> => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      return true;
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch(`/api/user/${user.uid}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+      const database = await response.json();
+      if (!user) {
+        throw new Error();
+      } else if (user && !database.user) {
+        logout();
+        throw new Error();
+      } else {
+        return true;
+      }
     } catch (err) {
       return false;
     }
@@ -95,28 +116,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (
-    firstName: string,
-    lastName: string,
+  const signUpWithEmail = async (
+    displayName: string,
+    username: string,
     userType: string,
     email: string,
     password: string
   ): Promise<boolean> => {
     try {
-      console.log(firstName, lastName, userType, email, password);
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      if (!user) {
-        throw new Error("User not registered!");
-      }
 
       const data = {
         id: user.uid,
-        firstName: firstName,
-        lastName: lastName,
+        displayName: displayName,
+        username: username,
         userType: userType
       };
 
@@ -135,7 +152,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const value: AuthContextValue = { user, login, logout, signUp, loading };
+  const value: AuthContextValue = {
+    user,
+    loginWithEmail,
+    logout,
+    signUpWithEmail,
+    loading
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -1,7 +1,6 @@
 import { prisma } from "@/app/utils/prisma";
-import { UserSchema } from "@/app/utils/UserProps";
 import { NextRequest, NextResponse } from "next/server";
-import { getProfilePicture } from "@/app/utils/getProfilePicture";
+import { getUserDataWithId } from "@/app/utils/getUserDataWithId";
 
 export async function GET(
   req: NextRequest,
@@ -16,22 +15,15 @@ export async function GET(
       throw new Error("ID params not found!");
     } else {
       const idString = params.id;
-      const user = await prisma.users.findFirst({
-        where: {
-          id: idString
-        }
-      });
+      const user = await getUserDataWithId(idString);
       if (!user) {
         throw new Error("User not found!");
       }
-
-      const url = await getProfilePicture(user.profilePicture);
-      user.profilePicture = url;
-
-      UserSchema.parse(user);
+      await prisma.$disconnect();
       return NextResponse.json({ user }, { status: 200 });
     }
   } catch (err) {
+    await prisma.$disconnect();
     return NextResponse.json({ user: null }, { status: 404 });
   } finally {
     await prisma.$disconnect();

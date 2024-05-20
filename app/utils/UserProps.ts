@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const UserSchema = z.object({
   id: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  displayName: z.string(),
+  username: z.string(),
   profilePicture: z.string(),
   bio: z.string(),
   location: z.string(),
@@ -15,13 +15,13 @@ export type UserType = z.infer<typeof UserSchema>;
 
 export interface UserInterface {
   id: string;
-  firstName: string;
-  lastName: string;
+  displayName: string;
+  username: string;
   profilePicture: string;
   bio: string;
   location: string;
   userType: string;
-  isAdmin: string;
+  isAdmin: boolean;
 }
 
 export interface AuthProps {

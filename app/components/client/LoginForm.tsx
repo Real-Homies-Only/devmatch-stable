@@ -6,8 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
+import Modal from "react-modal";
 
-import { mdiGoogle } from "@mdi/js";
+import { mdiArrowLeft } from "@mdi/js";
 import { AuthContext } from "@/app/context/AuthContext";
 import { Headings } from "@/app/fonts/roboto";
 import { Body } from "@/app/fonts/roboto";
@@ -21,7 +22,8 @@ type LoginForm = z.infer<typeof LoginFormSchema>;
 
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { login } = useContext(AuthContext);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const { loginWithEmail, loading, user } = useContext(AuthContext);
   const router = useRouter();
   const {
     register,
@@ -32,9 +34,12 @@ const LoginForm = () => {
   const handleLogin = async (loginData: LoginForm) => {
     const { email, password } = loginData;
     try {
-      const result = await login(email, password);
+      const result = await loginWithEmail(email, password);
       if (result === true) {
-        router.push("/");
+        setLoggedIn(true);
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       } else {
         throw new Error();
       }
@@ -43,9 +48,48 @@ const LoginForm = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex flex-col w-full items-center">
+        <span className="loading loading-lg text-primary" />
+      </div>
+    );
+  }
+
+  if (user) {
+    router.push("/");
+    return <div></div>;
+  }
+
   return (
     <div className="artboard w-96 bg-background rounded-md flex flex-col p-4 shadow-lg">
-      <div className={`${Headings.className} text-xl mb-4`}>Join DevMatch</div>
+      <Modal
+        isOpen={loggedIn}
+        contentLabel="Loading..."
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
+      >
+        <div
+          className={`flex flex-col gap-4 items-center ${Headings.className}`}
+        >
+          <span className="text-xl text-primary">
+            Logged in! Redirecting...
+          </span>
+          <span className="loading loading-spinner text-primary loading-lg" />
+        </div>
+      </Modal>
+      <div
+        className={`${Body.className} flex flex-row gap-2 `}
+        onClick={() => router.back()}
+      >
+        <span className="flex flex-row px-2 rounded-md gap-2 hover:bg-gray-300 cursor-pointer">
+          <Icon path={mdiArrowLeft} size={1} />
+          Back
+        </span>
+      </div>
+      <div className={`${Headings.className} text-xl mb-4 self-center`}>
+        Join DevMatch
+      </div>
       <form
         onSubmit={handleSubmit(handleLogin)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
@@ -62,7 +106,7 @@ const LoginForm = () => {
             />
           </label>
           {errors.email && (
-            <span className="text-letter mb-2">
+            <span className="text-letter mb-2 mt-1">
               {String(errors.email.message)}
             </span>
           )}
@@ -81,14 +125,14 @@ const LoginForm = () => {
             />
           </label>
           {errors.password && (
-            <span className="text-letter mb-2">
+            <span className="text-letter mb-2 mt-1">
               {String(errors.password.message)}
             </span>
           )}
         </div>
 
         {errorMessage && (
-          <div>
+          <div className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
@@ -110,13 +154,6 @@ const LoginForm = () => {
           </div>
         </div>
       </form>
-      <div className="divider divider-primary">OR</div>
-      <button
-        className={`${Body.className} flex flex-row items-center font-light btn btn-outline btn-letter border-primary self-center`}
-      >
-        <Icon path={mdiGoogle} size={0.8} />
-        <span>Login With Google</span>
-      </button>
     </div>
   );
 };

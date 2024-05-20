@@ -14,30 +14,32 @@ export async function POST(
     if (!params.id) {
       throw new Error("ID params not found!");
     } else {
-      const { firstName, lastName, userType } = await req.json();
+      const { displayName, userType, username } = await req.json();
       const idString = params.id;
-
-      const data = {
-        id: idString,
-        firstName: firstName,
-        lastName: lastName,
-        userType: userType
-      };
 
       const RegisteredUserSchema = z.object({
         id: z.string(),
-        firstName: z.string(),
-        lastName: z.string(),
+        displayName: z.string(),
+        username: z.string(),
         userType: z.string()
       });
+
+      type RegisteredUserSchema = z.infer<typeof RegisteredUserSchema>;
+
+      const data: RegisteredUserSchema = {
+        id: idString,
+        displayName: displayName,
+        username: username,
+        userType: userType
+      };
 
       RegisteredUserSchema.parse(data);
 
       await prisma.users.create({
         data: {
           id: idString,
-          firstName: firstName,
-          lastName: lastName,
+          displayName: displayName,
+          username: username,
           userType: userType
         }
       });
