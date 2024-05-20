@@ -2,13 +2,16 @@
   "name": "devmatch-stable",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "test": "jest",
+    "setup": "node ./db/setupDb.mjs",
+    "teardown": "node ./db/teardownDb.mjs",
+    "test": "npm run setup && jest --forceExit && npm run teardown",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
@@ -34,6 +37,7 @@
     "zod": "^3.23.6"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@swc/core": "^1.5.7",
     "@swc/jest": "^0.2.36",
     "@testing-library/jest-dom": "^5.16.5",
