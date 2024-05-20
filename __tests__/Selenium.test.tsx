@@ -251,38 +251,23 @@ describe("Selenium Automated Test", () => {
   });
 
   describe("Client Automated Test", () => {
-    const clientEmail = crypto.randomBytes(6).toString("hex") + "@cpu.edu.ph";
-    const clientPassword = crypto.randomBytes(6).toString("hex");
-    const clientUsername = crypto.randomBytes(6).toString("hex");
+    const clientEmail = "client123@gmail.com";
+    const clientPassword = "123456";
 
-    it("register as a client", async () => {
+    it("login as a client", async () => {
       await driver.get(rootUrl);
       setTimeout(() => {}, 10000);
 
-      const registerButton = await getElementById("sign-up-button", driver);
-      await registerButton.click();
+      const loginButton = await getElementById("login-button", driver);
+      await loginButton.click();
 
-      await driver.wait(until.urlContains("/register"), 10000);
-
-      const displayNameInput = await getElementById("display-name", driver);
-      const usernameInput = await getElementById("username", driver);
+      await driver.wait(until.urlContains("/login"), 10000);
       const emailInput = await getElementById("email", driver);
       const passwordInput = await getElementById("password", driver);
-      const confirmPasswordInput = await getElementById(
-        "confirm-password",
-        driver
-      );
-      const userTypeInput = await getElementById("user-type", driver);
-      const clientOption = await getElementById("client", driver);
       const submitButton = await getElementById("submit", driver);
 
-      await displayNameInput.sendKeys(crypto.randomBytes(6).toString("hex"));
-      await usernameInput.sendKeys(clientUsername);
       await emailInput.sendKeys(clientEmail);
       await passwordInput.sendKeys(clientPassword);
-      await confirmPasswordInput.sendKeys(clientPassword);
-      await userTypeInput.click();
-      await clientOption.click();
       await submitButton.click();
 
       await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
