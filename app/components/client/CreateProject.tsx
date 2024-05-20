@@ -183,7 +183,9 @@ const CreateProject: React.FC = () => {
                 {...register("category")}
               >
                 <option value="">Select a category</option>
-                <option value="game">Game Development</option>
+                <option id="game" value="game">
+                  Game Development
+                </option>
                 <option value="mobile">Mobile Application</option>
                 <option value="web">Web Development</option>
               </select>

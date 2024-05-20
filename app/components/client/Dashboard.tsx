@@ -63,7 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
     <Fragment>
       {project.developerId ? (
         project && user && otherUser ? (
-          <div className="flex flex-col self-center">
+          <div id="project-dashboard" className="flex flex-col self-center">
             <div className="flex">
               {selected === 1 ? (
                 <ProjectHome

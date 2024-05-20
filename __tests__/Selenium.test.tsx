@@ -3,6 +3,7 @@ import "selenium-webdriver/chrome";
 import "chromedriver";
 import { getElementById } from "@/app/utils";
 import crypto from "crypto";
+import path from "path";
 
 const rootUrl = "http://localhost:3000";
 let driver: WebDriver;
@@ -10,6 +11,7 @@ let driver: WebDriver;
 describe("Selenium Automated Test", () => {
   const email = crypto.randomBytes(6).toString("hex") + "@cpu.edu.ph";
   const password = crypto.randomBytes(6).toString("hex");
+  const username = crypto.randomBytes(6).toString("hex");
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -125,7 +127,7 @@ describe("Selenium Automated Test", () => {
         const submitButton = await getElementById("submit", driver);
 
         await displayNameInput.sendKeys(crypto.randomBytes(6).toString("hex"));
-        await usernameInput.sendKeys(crypto.randomBytes(6).toString("hex"));
+        await usernameInput.sendKeys(username);
         await emailInput.sendKeys(email);
         await passwordInput.sendKeys(password);
         await confirmPasswordInput.sendKeys(password);
@@ -248,5 +250,106 @@ describe("Selenium Automated Test", () => {
     });
   });
 
-  describe("Client Automated Test", () => {});
+  describe("Client Automated Test", () => {
+    const clientEmail = crypto.randomBytes(6).toString("hex") + "@cpu.edu.ph";
+    const clientPassword = crypto.randomBytes(6).toString("hex");
+    const clientUsername = crypto.randomBytes(6).toString("hex");
+
+    it("register as a client", async () => {
+      await driver.get(rootUrl);
+      setTimeout(() => {}, 10000);
+
+      const registerButton = await getElementById("sign-up-button", driver);
+      await registerButton.click();
+
+      await driver.wait(until.urlContains("/register"), 10000);
+
+      const displayNameInput = await getElementById("display-name", driver);
+      const usernameInput = await getElementById("username", driver);
+      const emailInput = await getElementById("email", driver);
+      const passwordInput = await getElementById("password", driver);
+      const confirmPasswordInput = await getElementById(
+        "confirm-password",
+        driver
+      );
+      const userTypeInput = await getElementById("user-type", driver);
+      const clientOption = await getElementById("client", driver);
+      const submitButton = await getElementById("submit", driver);
+
+      await displayNameInput.sendKeys(crypto.randomBytes(6).toString("hex"));
+      await usernameInput.sendKeys(clientUsername);
+      await emailInput.sendKeys(clientEmail);
+      await passwordInput.sendKeys(clientPassword);
+      await confirmPasswordInput.sendKeys(clientPassword);
+      await userTypeInput.click();
+      await clientOption.click();
+      await submitButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+    }, 30000);
+
+    it("creates a project", async () => {
+      await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
+      await driver.wait(
+        until.elementLocated({ id: "create-project-button" }),
+        5000
+      );
+      const projectsButton = await driver.findElement({
+        id: "create-project-button"
+      });
+      await projectsButton.click();
+
+      setTimeout(() => {}, 5000);
+
+      const photoPath = path.join(process.cwd(), "public", "hero-bg2.jpg");
+
+      const photoInput = await getElementById("photo", driver);
+      const titleInput = await getElementById("projectName", driver);
+      const categoryInput = await getElementById("category", driver);
+      const gameCategoryOption = await getElementById("game", driver);
+      const languageInput = await getElementById("language", driver);
+      const descriptionInput = await getElementById("description", driver);
+      const budgetInput = await getElementById("budget", driver);
+      const submitButton = await getElementById("submit", driver);
+
+      await photoInput.sendKeys(photoPath);
+      await titleInput.sendKeys("Test Project");
+      await categoryInput.click();
+      await gameCategoryOption.click();
+      await languageInput.sendKeys("TypeScript");
+      await descriptionInput.sendKeys("Test Description");
+      await budgetInput.sendKeys("1000");
+      await submitButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+    });
+
+    it("opens project and accepts a bid", async () => {
+      await driver.wait(until.elementLocated({ id: "projects-button" }), 10000);
+      const projectsButton = await driver.findElement({
+        id: "projects-button"
+      });
+
+      if (projectsButton) {
+        await projectsButton.click();
+
+        await driver.wait(until.elementLocated({ id: "project-0" }), 5000);
+        const sampleProjectButton = await driver.findElement({
+          id: "project-0"
+        });
+        await sampleProjectButton.click();
+      }
+
+      await driver.wait(until.elementLocated({ id: "bid-0" }), 5000);
+      const acceptBidButton = await driver.findElement({ id: "bid-0" });
+      await acceptBidButton.click();
+      const confirmButton = await getElementById("accept-bid-button", driver);
+      await confirmButton.click();
+
+      await driver.wait(
+        until.elementLocated({ id: "project-dashboard" }),
+        15000
+      );
+    });
+  });
 });

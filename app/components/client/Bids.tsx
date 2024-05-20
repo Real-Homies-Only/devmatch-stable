@@ -81,6 +81,7 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
           <div className="flex justify-end">
             {acceptModal ? (
               <button
+                id="accept-bid-button"
                 className="btn btn-primary flex items-center"
                 onClick={() => handleAcceptBid(developerId)}
               >
@@ -127,7 +128,7 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
               {bidsLoading ? (
                 <span className="loading loading-spinner loading-lg self-center justify-center"></span>
               ) : bids ? (
-                bids.map((bid) => (
+                bids.map((bid, index) => (
                   <div
                     key={bid.id}
                     className="flex flex-row border border-gray-300 rounded-xl mt-4 gap-4 p-4"
@@ -163,6 +164,7 @@ const Bids: React.FC<BidsProps> = ({ project, client }) => {
                         {bid.bidComment}
                       </div>
                       <div
+                        id={`bid-${index}`}
                         onClick={() => {
                           setIsModalOpen(true);
                           setAcceptModal(true);

@@ -52,6 +52,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
       <div className="flex flex-row">
         {userType === "Client" ? (
           <div
+            id="create-project-button"
             onClick={() => router.push("/projects/create")}
             className="btn btn-ghost btn-circle lg:w-36 hover:bg-gray-100"
           >
@@ -73,6 +74,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
         )}
 
         <div
+          id="projects-button"
           tabIndex={0}
           role="button"
           className="btn btn-ghost btn-circle mr-2 dropdown dropdown-bottom dropdown-end z-10 flex hover:bg-gray-100"
@@ -92,6 +94,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
               projects.map((project, index) => (
                 <li key={index}>
                   <div
+                    id={`project-${index}`}
                     onClick={() => router.push(`/project/${project.id}`)}
                     className="hover:bg-gray-100 border-y border-secondary btn btn-ghost justify-start flex"
                   >
