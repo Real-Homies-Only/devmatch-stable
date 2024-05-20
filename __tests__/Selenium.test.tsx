@@ -144,7 +144,6 @@ describe("Selenium Automated Test", () => {
     });
 
     it("logout after clicking 'Logout Button'", async () => {
-      jest.setTimeout(30000);
       await driver.get(rootUrl);
       setTimeout(() => {}, 10000);
       const loginButton = await getElementById("login-button", driver);
@@ -273,7 +272,7 @@ describe("Selenium Automated Test", () => {
       await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
     }, 30000);
 
-    it("creates a project", async () => {
+    it("cancels project creation", async () => {
       await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
       await driver.wait(
         until.elementLocated({ id: "create-project-button" }),
@@ -286,16 +285,43 @@ describe("Selenium Automated Test", () => {
 
       setTimeout(() => {}, 5000);
 
-      const photoPath = path.join(process.cwd(), "public", "hero-bg2.jpg");
+      await driver.wait(until.elementLocated({ id: "cancel" }), 10000);
+      const cancelButton = await getElementById("cancel", driver);
+      await cancelButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+
+      setTimeout(() => {}, 5000);
+    }, 30000);
+
+    it("creates a project", async () => {
+      await driver.get(rootUrl);
+      await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
+      await driver.wait(
+        until.elementLocated({ id: "create-project-button" }),
+        5000
+      );
+      const projectsButton = await driver.findElement({
+        id: "create-project-button"
+      });
+      await projectsButton.click();
+
+      setTimeout(() => {}, 10000);
+
+      const photoPath = path.join(
+        process.cwd(),
+        "public",
+        "images",
+        "hero-bg2.jpg"
+      );
 
       const photoInput = await getElementById("photo", driver);
-      const titleInput = await getElementById("projectName", driver);
-      const categoryInput = await getElementById("category", driver);
-      const gameCategoryOption = await getElementById("game", driver);
-      const languageInput = await getElementById("language", driver);
-      const descriptionInput = await getElementById("description", driver);
-      const budgetInput = await getElementById("budget", driver);
-      const submitButton = await getElementById("submit", driver);
+      const titleInput = await driver.findElement({ id: "projectName" });
+      const categoryInput = await driver.findElement({ id: "category" });
+      const gameCategoryOption = await driver.findElement({ id: "game" });
+      const languageInput = await driver.findElement({ id: "language" });
+      const descriptionInput = await driver.findElement({ id: "description" });
+      const submitButton = await getElementById("submit-button", driver);
 
       await photoInput.sendKeys(photoPath);
       await titleInput.sendKeys("Test Project");
@@ -303,11 +329,10 @@ describe("Selenium Automated Test", () => {
       await gameCategoryOption.click();
       await languageInput.sendKeys("TypeScript");
       await descriptionInput.sendKeys("Test Description");
-      await budgetInput.sendKeys("1000");
       await submitButton.click();
 
       await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
-    });
+    }, 30000);
 
     it("opens project and accepts a bid", async () => {
       await driver.wait(until.elementLocated({ id: "projects-button" }), 10000);
@@ -335,6 +360,6 @@ describe("Selenium Automated Test", () => {
         until.elementLocated({ id: "project-dashboard" }),
         15000
       );
-    });
+    }, 30000);
   });
 });
