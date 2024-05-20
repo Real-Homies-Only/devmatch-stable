@@ -28,7 +28,10 @@
     ".next/types/**/*.ts",
     "__mocks__/styleMock.js",
     "__mocks__/fileMock.js",
-    "__mocks__/nextFontMock.js"
+    "__mocks__/nextFontMock.js",
+    "db/teardownDb.mjs",
+    "db/setupDb.mjs",
+    "db/setupDb.mjs"
   ],
   "exclude": ["node_modules"]
 }
