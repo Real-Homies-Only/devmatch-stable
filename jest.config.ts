@@ -13,7 +13,7 @@ const createJestConfig = nextJest({
 
 const config: Config = {
   preset: "ts-jest",
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   coverageDirectory: "coverage",
   testEnvironment: "jsdom",
   testRegex: "/__tests__/.*\\.test\\.tsx$",
