@@ -247,4 +247,6 @@ describe("Selenium Automated Test", () => {
       });
     });
   });
+
+  describe("Client Automated Test", () => {});
 });
