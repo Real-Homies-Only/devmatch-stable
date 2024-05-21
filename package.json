@@ -9,9 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "setup": "node ./db/setupDb.mjs",
-    "teardown": "node ./db/teardownDb.mjs",
-    "test": "npm run setup && jest --forceExit && npm run teardown",
+    "setup:selenium": "node ./db/setupDbSelenium.mjs",
+    "teardown:selenium": "node ./db/teardownDbSelenium.mjs",
+    "test:selenium": "npm run teardown:selenium && npm run setup:selenium && jest --forceExit --testPathPattern=__tests__/selenium/ && npm run teardown:selenium",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
