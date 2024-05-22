@@ -12,7 +12,9 @@
     "setup:selenium": "node ./db/setupDbSelenium.mjs",
     "teardown:selenium": "node ./db/teardownDbSelenium.mjs",
     "test:selenium": "npm run teardown:selenium && npm run setup:selenium && jest --forceExit --testPathPattern=__tests__/selenium/ && npm run teardown:selenium",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "test:unit": "jest --forceExit --testPathPattern=__tests__/unit/ --env=jsdom",
+    "test:integration": "jest --forceExit --testPathPattern=__tests__/integration/ --env=node"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.569.0",
