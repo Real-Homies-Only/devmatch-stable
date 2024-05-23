@@ -15,6 +15,7 @@ export async function POST(
 
       const existingBid = await prisma.bids.findFirst({
         where: {
+          projectId: idString,
           userId: userId
         }
       });
