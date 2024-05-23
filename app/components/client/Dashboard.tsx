@@ -51,7 +51,14 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
 
       getOtherUserId();
     }
-  }, [otherUser, user, project, router]);
+  }, [
+    project.id,
+    project.clientId,
+    project.developerId,
+    project.finished,
+    user,
+    router
+  ]);
 
   if (loading) {
     return (

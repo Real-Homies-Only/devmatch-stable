@@ -2,11 +2,10 @@
 import { Body, Headings } from "@/app/fonts/roboto";
 import { ProjectType } from "@/app/utils/ProjectProps";
 import { UserType } from "@/app/utils/UserProps";
-import {
-  mdiAlertCircleOutline,
-  mdiArrowLeftBoldOutline,
-  mdiCheck
-} from "@mdi/js";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { z } from "zod";
+import { mdiAlertCircleOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useRouter } from "next/navigation";
 import React, { Fragment, useState } from "react";
@@ -18,6 +17,16 @@ interface ProjectHomeProps {
   user: UserType | null;
 }
 
+const RatingSchema = z.object({
+  rating: z.number().min(1, "Rating is required").max(5, "Rating is too high"),
+  comment: z.string().min(3, "Rating comment is required")
+});
+
+type FormData = z.infer<typeof RatingSchema> & {
+  rating: number;
+  comment: string;
+};
+
 const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
   const [progress, setProgress] = useState(project.progress);
   const [errorVisible, setErrorVisible] = useState(false);
@@ -28,6 +37,38 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
   const progressBar = {
     "--value": project.progress
   } as React.CSSProperties;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: zodResolver(RatingSchema)
+  });
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const rating = Number(data.rating);
+    const response = await fetch(`/api/project/${project.id}/rate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: project.developerId,
+        comment: data.comment,
+        rate: rating
+      })
+    });
+
+    if (response.ok) {
+      handleFinishProject(true);
+      router.push("/");
+    } else {
+      setErrorMessage("Error submitting rating!");
+      setErrorVisible(true);
+      setTimeout(() => {
+        setErrorVisible(false);
+      }, 5000);
+    }
+  };
 
   const handleChangeProgress = async (progress: number) => {
     const response = await fetch(`/api/project/${project.id}`, {
@@ -125,7 +166,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
               )}
               <Modal
                 isOpen={isModalOpen}
-                contentLabel="Project Creation Result"
+                contentLabel="Project Finished?"
                 className="fixed inset-0 z-50 flex items-center justify-center mx-4"
                 overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
                 appElement={document.getElementById("root") || undefined}
@@ -134,29 +175,87 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                   <h2 className="text-xl mb-4">
                     Are you sure the project is finished?
                   </h2>
-                  <div className="flex justify-end gap-2">
-                    <button
-                      className="btn btn-primary flex items-center"
-                      onClick={() => setIsModalOpen(false)}
+                  <div>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="flex flex-col"
                     >
-                      <Icon
-                        path={mdiArrowLeftBoldOutline}
-                        size={0.8}
-                        className="inline-block mr-2"
+                      <div className="rating rating-md">
+                        <Controller
+                          name="rating"
+                          control={control}
+                          render={({ field }) => (
+                            <>
+                              <input
+                                type="radio"
+                                {...field}
+                                value={1}
+                                className="mask mask-star-2 bg-orange-400"
+                                checked={field.value === 1}
+                                onChange={() => field.onChange(1)}
+                              />
+                              <input
+                                type="radio"
+                                {...field}
+                                value={2}
+                                className="mask mask-star-2 bg-orange-400"
+                                checked={field.value === 2}
+                                onChange={() => field.onChange(2)}
+                              />
+                              <input
+                                type="radio"
+                                {...field}
+                                value={3}
+                                className="mask mask-star-2 bg-orange-400"
+                                checked={field.value === 3}
+                                onChange={() => field.onChange(3)}
+                              />
+                              <input
+                                type="radio"
+                                {...field}
+                                value={4}
+                                className="mask mask-star-2 bg-orange-400"
+                                checked={field.value === 4}
+                                onChange={() => field.onChange(4)}
+                              />
+                              <input
+                                type="radio"
+                                {...field}
+                                value={5}
+                                className="mask mask-star-2 bg-orange-400"
+                                checked={field.value === 5}
+                                onChange={() => field.onChange(5)}
+                              />
+                            </>
+                          )}
+                        />
+                        {errors.rating && (
+                          <p className="text-red-500">
+                            {errors.rating.message}
+                          </p>
+                        )}
+                      </div>
+                      <Controller
+                        name="comment"
+                        control={control}
+                        render={({ field }) => (
+                          <textarea
+                            className={`${Body.className} w-full h-32 border border-gray-300 rounded-lg p-2`}
+                            placeholder="Write a comment about the developer..."
+                            {...field}
+                          />
+                        )}
                       />
-                      Not Yet!
-                    </button>
-                    <button
-                      className="btn btn-primary flex items-center"
-                      onClick={() => handleFinishProject(true)}
-                    >
-                      <Icon
-                        path={mdiCheck}
-                        size={0.8}
-                        className="inline-block mr-2"
-                      />
-                      Accept
-                    </button>
+                      {errors.comment && (
+                        <p className="text-red-500">{errors.comment.message}</p>
+                      )}
+                      <button
+                        type="submit"
+                        className={`btn btn-primary ${Body.className} mt-2`}
+                      >
+                        Submit Rating
+                      </button>
+                    </form>
                   </div>
                 </div>
               </Modal>

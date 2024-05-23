@@ -31,3 +31,4 @@ Change the **assert** to **with** or vice versa in the **/db/teardownDb.mjs** fi
 if the tests fail with errors pointing to that line of code.
 
 In the Selenium phase, please do not click on the browser while it is running to avoid abruptly failing tests.
+

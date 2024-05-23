@@ -31,7 +31,7 @@ export async function GET(
         }
       });
       if (bids.length === 0) {
-        throw new Error("No projects found!");
+        throw new Error("No bids found!");
       }
 
       const bidList: Bid[] = [];

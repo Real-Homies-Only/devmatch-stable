@@ -5,8 +5,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  console.log("Received POST request:", req.url);
-  const { bidComment, userId } = await req.json();
+  const { userId, rate, comment } = await req.json();
 
   try {
     if (!params.id) {
@@ -14,37 +13,41 @@ export async function POST(
     } else {
       const idString = params.id;
 
-      const existingBid = await prisma.bids.findFirst({
+      const existingRating = await prisma.ratings.findFirst({
         where: {
-          userId: userId
+          projectId: idString
         }
       });
 
-      if (existingBid) {
+      if (existingRating) {
         return NextResponse.json(
-          { message: "You already have a bid on this project!" },
+          { message: "You already have a rating on this project!" },
           { status: 401 }
         );
       }
 
-      const bid = await prisma.bids.create({
+      const rating = await prisma.ratings.create({
         data: {
-          bidComment,
+          comment,
           projectId: idString,
-          userId
+          userId,
+          rating: rate
         }
       });
 
-      if (!bid) {
-        throw new Error("Error creating bid!");
+      if (!rating) {
+        throw new Error("Error creating rating!");
       }
 
       await prisma.$disconnect();
-      return NextResponse.json({ bid }, { status: 200 });
+      return NextResponse.json({ rating }, { status: 200 });
     }
   } catch (err) {
     await prisma.$disconnect();
-    return NextResponse.json({ error: "ERROR!" }, { status: 404 });
+    return NextResponse.json(
+      { message: "Error finishing project!" },
+      { status: 404 }
+    );
   } finally {
     await prisma.$disconnect();
   }

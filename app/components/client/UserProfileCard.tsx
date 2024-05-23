@@ -4,45 +4,43 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { Fragment, useState, useEffect } from "react";
 import { UserType } from "@/app/utils/UserProps";
+import Ratings from "./Ratings";
 
 const UserProfileCard: React.FC = () => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [userProfile, setUserProfile] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const params = useParams();
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!params.username) {
-        setUser(null);
+      const userString = params.username;
+      const response = await fetch(`/api/profile/${userString}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+      const { user } = await response.json();
+
+      const userInfo = {
+        id: user.id,
+        displayName: user.displayName,
+        username: user.username,
+        profilePicture: user.profilePicture,
+        bio: user.bio,
+        location: user.location,
+        userType: user.userType,
+        isAdmin: user.isAdmin
+      };
+
+      if (!response.ok) {
+        setUserProfile(null);
       } else {
-        const userString = params.username;
-        const response = await fetch(`/api/profile/${userString}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        });
-        const { user } = await response.json();
-
-        const userInfo = {
-          id: user.id,
-          displayName: user.displayName,
-          username: user.username,
-          profilePicture: user.profilePicture,
-          bio: user.bio,
-          location: user.location,
-          userType: user.userType,
-          isAdmin: user.isAdmin
-        };
-
-        if (response.ok) {
-          setUser(userInfo);
-        } else {
-          setUser(null);
-        }
+        setUserProfile(userInfo);
       }
+
       setLoading(false);
     };
     fetchUser();
-  }, [params.username, loading]);
+  }, [params, loading]);
 
   if (loading) {
     return (
@@ -54,10 +52,14 @@ const UserProfileCard: React.FC = () => {
     );
   }
 
+  if (!userProfile) {
+    return <div>User not found</div>;
+  }
+
   return (
     <Fragment>
-      {user ? (
-        <div className="flex ">
+      {userProfile ? (
+        <div className="flex flex-col items-center mx-12">
           <div
             className={`${Body.className} artboard gap-2 border-letter lg:border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 lg:shadow-md`}
           >
@@ -67,7 +69,7 @@ const UserProfileCard: React.FC = () => {
               >
                 <Image
                   className=""
-                  src={user.profilePicture}
+                  src={userProfile.profilePicture}
                   alt="Profile Picture"
                   width={480}
                   height={480}
@@ -76,22 +78,33 @@ const UserProfileCard: React.FC = () => {
             </div>
             <div className="self-center text-letter text-center">
               <div className="flex flex-col mb-2">
-                <div className="text-2xl ">{user.displayName}</div>
-                <div className="text-letter text-md">{user.userType}</div>
-                <div className="text-gray-400 text-sm">@{user.username}</div>
+                <div className="text-2xl ">{userProfile.displayName}</div>
+                <div className="text-letter text-md">
+                  {userProfile.userType}
+                </div>
+                <div className="text-gray-400 text-sm">
+                  @{userProfile.username}
+                </div>
               </div>
-              <div className="mb-2">{user.bio}</div>
+              <div className="mb-2">{userProfile.bio}</div>
               <div className="text-gray-500 gap-2 flex flex-row items-center justify-center">
-                <span>{user.location}</span>
+                <span>{userProfile.location}</span>
                 <span className=" text-xs text-accent font-bold bg-gray-700 px-3 py-1 rounded-lg cursor-default">
                   Location
                 </span>
               </div>
             </div>
           </div>
+          {userProfile.userType === "Developer" && (
+            <div
+              className={`${Body.className} artboard rounded-xl gap-2 border-letter lg:border flex flex-col w-full py-12 lg:mx-12 mx-4 mt-4 lg:shadow-md`}
+            >
+              <Ratings profile={userProfile} />
+            </div>
+          )}
         </div>
       ) : (
-        <div></div>
+        <div>User not found!</div>
       )}
     </Fragment>
   );

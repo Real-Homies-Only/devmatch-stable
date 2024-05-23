@@ -22,7 +22,7 @@ const BidForm: React.FC = () => {
     console.log("Submitting bid:", { bidComment, userId: developerId });
 
     try {
-      const response = await fetch(`/api/ProjectBid/${projectId}`, {
+      const response = await fetch(`/api/bids/${projectId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bidComment, userId: developerId })
