@@ -20,21 +20,23 @@ model Users {
   Messages       Messages[]
   client         Projects[] @relation("Client")
   developer      Projects[] @relation("Developer")
+  Ratings        Ratings[]
 }
 
 model Projects {
-  id             String  @id @unique @default(cuid()) @db.VarChar(32)
+  id             String    @id @unique @default(cuid()) @db.VarChar(32)
   projectName    String
   category       String
   language       String
   description    String
   clientId       String
   developerId    String?
-  projectPicture String? @default("defaultPhoto.png")
+  projectPicture String?   @default("defaultPhoto.png")
   bid            Bids[]
-  client         Users   @relation("Client", fields: [clientId], references: [id])
-  developer      Users?  @relation("Developer", fields: [developerId], references: [id])
+  client         Users     @relation("Client", fields: [clientId], references: [id])
+  developer      Users?    @relation("Developer", fields: [developerId], references: [id])
   Task           Task[]
+  Ratings        Ratings[]
 }
 
 model Bids {
@@ -44,6 +46,16 @@ model Bids {
   userId     String
   project    Projects @relation(fields: [projectId], references: [id])
   user       Users    @relation(fields: [userId], references: [id])
+}
+
+model Ratings {
+  id        String   @id @unique @default(cuid()) @db.VarChar(32)
+  rating    Int
+  comment   String
+  userId    String
+  User      Users    @relation(fields: [userId], references: [id])
+  projectId String
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model Messages {
