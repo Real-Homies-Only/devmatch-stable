@@ -32,9 +32,11 @@ model Projects {
   clientId       String
   developerId    String?
   projectPicture String?   @default("defaultPhoto.png")
+  progress       Int       @default(0)
+  finished       Boolean   @default(false)
   bid            Bids[]
-  client         Users     @relation("Client", fields: [clientId], references: [id])
-  developer      Users?    @relation("Developer", fields: [developerId], references: [id])
+  client         Users     @relation("Client", fields: [clientId], references: [id], onDelete: Cascade)
+  developer      Users?    @relation("Developer", fields: [developerId], references: [id], onDelete: Cascade)
   Task           Task[]
   Ratings        Ratings[]
 }
@@ -44,8 +46,8 @@ model Bids {
   bidComment String
   projectId  String
   userId     String
-  project    Projects @relation(fields: [projectId], references: [id])
-  user       Users    @relation(fields: [userId], references: [id])
+  project    Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Ratings {
@@ -53,7 +55,7 @@ model Ratings {
   rating    Int
   comment   String
   userId    String
-  User      Users    @relation(fields: [userId], references: [id])
+  User      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId String
   project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
@@ -65,7 +67,7 @@ model Messages {
   projectId String
   senderId  String
   sentTime  DateTime    @default(now())
-  Users     Users       @relation(fields: [senderId], references: [id])
+  Users     Users       @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 enum Column {
@@ -80,7 +82,7 @@ model Task {
   projectId String
   column    Column
   title     String
-  project   Projects @relation(fields: [projectId], references: [id])
+  project   Projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum MessageType {
