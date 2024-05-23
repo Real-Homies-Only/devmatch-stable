@@ -5,7 +5,6 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  console.log("Received POST request:", req.url);
   const { bidComment, userId } = await req.json();
 
   try {
