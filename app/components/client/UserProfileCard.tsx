@@ -33,7 +33,6 @@ const UserProfileCard: React.FC = () => {
 
       if (!response.ok) {
         setUserProfile(null);
-        console.log(loading);
       } else {
         setUserProfile(userInfo);
       }
