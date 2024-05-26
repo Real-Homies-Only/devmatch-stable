@@ -13,38 +13,44 @@ const UserProfileCard: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userString = params.username;
-      const response = await fetch(`/api/profile/${userString}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      });
-      const { user } = await response.json();
+      try {
+        const userString = params?.username || "";
+        const response = await fetch(`/api/profile/${userString}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+        const { user } = await response.json();
+        setLoading(false);
 
-      const userInfo = {
-        id: user.id,
-        displayName: user.displayName,
-        username: user.username,
-        profilePicture: user.profilePicture,
-        bio: user.bio,
-        location: user.location,
-        userType: user.userType,
-        isAdmin: user.isAdmin
-      };
+        const userInfo = {
+          id: user.id,
+          displayName: user.displayName,
+          username: user.username,
+          profilePicture: user.profilePicture,
+          bio: user.bio,
+          location: user.location,
+          userType: user.userType,
+          isAdmin: user.isAdmin
+        };
 
-      if (!response.ok) {
+        if (!response.ok) {
+          throw new Error();
+        } else {
+          setUserProfile(userInfo);
+        }
+
+        setLoading(false);
+      } catch (err) {
         setUserProfile(null);
-      } else {
-        setUserProfile(userInfo);
+        setLoading(false);
       }
-
-      setLoading(false);
     };
     fetchUser();
   }, [params, loading]);
 
   if (loading) {
     return (
-      <div className="flex flex-col w-full items-center">
+      <div role="status" className="flex flex-col w-full items-center">
         <div className="artboard phone-1 artboard-horizontal w-full mx-4 lg:mx-12 mt-4 self-center flex flex-1 items-center justify-center">
           <span className="loading loading-spinner loading-lg self-center justify-center"></span>
         </div>
@@ -59,7 +65,7 @@ const UserProfileCard: React.FC = () => {
   return (
     <Fragment>
       {userProfile ? (
-        <div className="flex flex-col items-center mx-12">
+        <div data-testid="profile" className="flex flex-col items-center mx-12">
           <div
             className={`${Body.className} artboard gap-2 border-letter lg:border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 lg:shadow-md`}
           >

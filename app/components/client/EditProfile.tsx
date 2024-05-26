@@ -76,6 +76,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   return (
     <Fragment>
       <form
+        role="form"
         onSubmit={handleSubmit(handleEdit)}
         className={`${Body.className} self-center w-full flex flex-col gap-4`}
       >
@@ -85,6 +86,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
               Display Name
             </span>
             <input
+              data-testid="display-name"
               type="text"
               className="grow"
               defaultValue={displayName}
@@ -104,6 +106,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
               Username
             </span>
             <input
+              data-testid="username"
               type="text"
               className="grow"
               defaultValue={username}
@@ -119,6 +122,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         </div>
         <div className="gap-1 flex flex-col">
           <textarea
+            data-testid="bio"
             className="textarea textarea-bordered textarea-primary w-full"
             placeholder="Bio"
             {...register("bio")}
@@ -134,6 +138,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         </div>
         <div className="gap-1 self-center flex flex-col">
           <select
+            data-testid="location"
             className="select select-primary w-full max-w-xs"
             {...register("location")}
           >
@@ -163,6 +168,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
         <div className="flex flex-1 flex-row self-center gap-8 items-center">
           <button
+            role="button"
             type="submit"
             className="btn btn-outline btn-primary self-end"
           >

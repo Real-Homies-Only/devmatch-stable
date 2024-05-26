@@ -50,7 +50,7 @@ const LoginForm = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col w-full items-center">
+      <div data-testid="loading" className="flex flex-col w-full items-center">
         <span className="loading loading-lg text-primary" />
       </div>
     );
@@ -91,6 +91,7 @@ const LoginForm = () => {
         Join DevMatch
       </div>
       <form
+        data-testid="login-form"
         id="login-form"
         onSubmit={handleSubmit(handleLogin)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
@@ -148,11 +149,18 @@ const LoginForm = () => {
           >
             Log In
           </button>
-          <div className="flex flex-col ">
-            <a href="/register" className="hover:underline cursor-pointer">
+          <div className="flex flex-col " data-testid="help">
+            <a
+              href="/register"
+              onClick={() => router.push("/register")}
+              className="hover:underline cursor-pointer"
+            >
               {"I don't have an account"}
             </a>
-            <a className="hover:underline cursor-pointer">
+            <a
+              onClick={() => router.push("/register")}
+              className="hover:underline cursor-pointer"
+            >
               {"I forgot my password"}
             </a>
           </div>
