@@ -8,6 +8,7 @@ const Task: React.FC<TaskProps> = ({ title, id, column, handleDragStart }) => {
     <>
       <DropIndicator beforeId={id} column={column} />
       <motion.div
+        data-testid="task-card"
         layout
         layoutId={id}
         draggable="true"

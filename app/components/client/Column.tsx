@@ -138,7 +138,10 @@ const Column: React.FC<ColumnProps> = ({
   const filteredTasks = tasks.filter((c) => c.column === column);
 
   return (
-    <div className="w-full sm:w-56 shrink-0 md:w-64 lg:w-72">
+    <div
+      data-testid={`${column.toLowerCase()}-column`}
+      className="w-full sm:w-56 shrink-0 md:w-64 lg:w-72"
+    >
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium ${headingColor}`}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
