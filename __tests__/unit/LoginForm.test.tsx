@@ -1,14 +1,18 @@
 import React from "react";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within
+} from "@testing-library/react";
 import LoginForm from "@/app/components/client/LoginForm";
 import { UserType } from "@/app/utils/UserProps";
 import fetchMock from "jest-fetch-mock";
 import { AuthContext } from "@/app/context/AuthContext";
-import auth from "firebase/auth";
+import { getAuth } from "@/__mocks__/firebase-auth";
 
 jest.mock("firebase/auth");
-
-export default auth;
 
 let mockPush: any;
 jest.mock("next/navigation", () => ({
@@ -109,13 +113,69 @@ describe("Login Form", () => {
     expect(mockPush).toHaveBeenCalledWith("/register");
   });
 
-  // it('loginWithEmail should return true when successful', async () => {
-  //   const { loginWithEmail } = renderWithAuthProvider();
-  //   const result = await loginWithEmail('test@email.com', 'password');
-  //   expect(result).toBe(true);
-  //   expect(auth.signInWithEmailAndPassword).toHaveBeenCalledWith(
-  //     'test@email.com',
-  //     'password'
-  //   );
-  // });
+  it("should return user when credentials are valid", async () => {
+    const mockAuthWithFirebase = {
+      user: null,
+      loading: false,
+      loginWithEmail: jest.fn(),
+      logout: jest.fn(() => Promise.resolve(true)),
+      signUpWithEmail: jest.fn(() => Promise.resolve(true))
+    };
+
+    const mockGetAuth = getAuth();
+    mockGetAuth.signInWithEmailAndPassword.mockResolvedValueOnce({
+      user: mockUser
+    });
+    render(
+      <AuthContext.Provider value={mockAuthWithFirebase}>
+        <LoginForm />
+      </AuthContext.Provider>
+    );
+
+    const emailInput = screen.getByPlaceholderText("email@gmail.com");
+    const passwordInput = screen.getByPlaceholderText("******");
+    const submitButton = screen.getByText("Log In");
+
+    fireEvent.change(emailInput, { target: { value: "valid@email.com" } });
+    fireEvent.change(passwordInput, { target: { value: "validpassword" } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockAuthWithFirebase.loginWithEmail).toHaveBeenCalledWith(
+        "valid@email.com",
+        "validpassword"
+      );
+    });
+  });
+
+  it("should show an error message when credentials are invalid", async () => {
+    const mockAuthWithFirebase = {
+      user: null,
+      loading: false,
+      loginWithEmail: jest.fn(),
+      logout: jest.fn(() => Promise.resolve(true)),
+      signUpWithEmail: jest.fn(() => Promise.resolve(true))
+    };
+
+    mockAuth.loginWithEmail.mockRejectedValueOnce(
+      new Error("Invalid credentials")
+    );
+
+    render(
+      <AuthContext.Provider value={mockAuthWithFirebase}>
+        <LoginForm />
+      </AuthContext.Provider>
+    );
+
+    const emailInput = screen.getByPlaceholderText("email@gmail.com");
+    const passwordInput = screen.getByPlaceholderText("******");
+    const submitButton = screen.getByText("Log In");
+
+    fireEvent.change(emailInput, { target: { value: "invalid@email.com" } });
+    fireEvent.change(passwordInput, { target: { value: "invalidpassword" } });
+    fireEvent.click(submitButton);
+
+    const errorMessage = await screen.findByText("Invalid email or password");
+    expect(errorMessage).toBeInTheDocument();
+  });
 });
