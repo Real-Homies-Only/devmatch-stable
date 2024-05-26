@@ -79,6 +79,7 @@ const BrowseProject = () => {
   return (
     <div className="flex flex-col items-center min-h-screen relative pt-6">
       <div
+        id="project-cards-container"
         ref={projectsContainerRef}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"
       >
@@ -88,9 +89,10 @@ const BrowseProject = () => {
           </div>
         ) : (
           Array.isArray(currentProjects) &&
-          currentProjects.map((project) => (
+          currentProjects.map((project, index) => (
             <div
               key={project.id}
+              id={`project-card-${index + 1}`}
               data-testid={`project-card-${project.id}`}
               className="w-64 h-64 bg-white shadow-md rounded border border-primary p-4"
               onClick={() => handleProjectClick(project)}
@@ -174,6 +176,7 @@ const BrowseProject = () => {
                   {selectedProject.description}
                 </p>
                 <button
+                  id="bid-button"
                   data-testid="bid-button"
                   className="btn btn-sm float-right border-primary"
                   onClick={() =>
