@@ -14,7 +14,9 @@ import { Body } from "@/app/fonts/roboto";
 
 const RegisterFormSchema = z
   .object({
-    displayName: z.string().min(2),
+    displayName: z
+      .string()
+      .min(2, "Display name should be more than 2 characters"),
     username: z
       .string()
       .min(4, "Username should be more than 4 characters")
@@ -113,6 +115,7 @@ const RegisterForm = () => {
         </div>
       </Modal>
       <form
+        data-testid="register-form"
         id="register-form"
         onSubmit={handleSubmit(handleRegister)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
@@ -210,6 +213,7 @@ const RegisterForm = () => {
         </div>
         <div className="gap-1 self-center">
           <select
+            data-testid="user-type"
             id="user-type"
             className="select select-primary w-full max-w-xs"
             {...register("userType")}
@@ -231,7 +235,10 @@ const RegisterForm = () => {
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
-        <div className="flex flex-1 flex-row self-center gap-8 items-center">
+        <div
+          data-testid="buttons"
+          className="flex flex-1 flex-row self-center gap-8 items-center"
+        >
           <button
             id="submit"
             type="submit"
