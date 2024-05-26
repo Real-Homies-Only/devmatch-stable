@@ -7,7 +7,7 @@ export const useRouter = jest.fn(() => ({
   isReady: true,
   pathname: "/",
   query: {},
-  push: jest.fn(), // Specify the type parameters
+  push: jest.fn(),
   replace: jest.fn(),
   reload: jest.fn(),
   back: jest.fn(),
