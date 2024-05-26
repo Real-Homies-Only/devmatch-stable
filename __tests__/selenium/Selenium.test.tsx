@@ -370,8 +370,7 @@ describe("Selenium Automated Test", () => {
         until.elementLocated({ id: "logout-button" }),
         10000
       );
-
-      // Wait for the logout button to be enabled and displayed
+      ``;
       await driver.wait(async () => {
         const isEnabled = await logoutButtonElement.isEnabled();
         const isDisplayed = await logoutButtonElement.isDisplayed();

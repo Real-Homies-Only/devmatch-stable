@@ -33,19 +33,18 @@ const CreateProject: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
 
+  if (!user || user.userType !== "Client") {
+    return null;
+  }
+
   const onSubmit = async (data: FormData) => {
     if (!user) {
       console.error("Please Register First!");
       return;
     }
 
-    if (user.userType !== "Client") {
-      setModalMessage("Only clients can create projects");
-      setIsModalOpen(true);
-      return;
-    }
-
     const categoryValue = getCategoryName(data.category);
+
     try {
       const formData = new FormData();
       formData.append("projectName", data.projectName);
@@ -108,11 +107,13 @@ const CreateProject: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center"
         overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
         appElement={document.getElementById("root") || undefined}
+        role="modal-info"
       >
         <div className="bg-white p-6 rounded-md shadow-md z-50">
           <h2 className="text-xl font-bold mb-4">{modalMessage}</h2>
           <div className="flex justify-end">
             <button
+              data-testid="back-to-home-button"
               className="btn btn-primary flex items-center"
               onClick={handleBackToHome}
             >
@@ -141,6 +142,7 @@ const CreateProject: React.FC = () => {
                 Photo
               </label>
               <input
+                data-testid="photo"
                 id="photo"
                 type="file"
                 accept="image/*"
@@ -156,7 +158,7 @@ const CreateProject: React.FC = () => {
                 Project Name
               </label>
               <input
-                id="projectName"
+                data-testid="project-name"
                 type="text"
                 placeholder="Enter project name"
                 className={`input input-bordered w-full ${
@@ -177,6 +179,7 @@ const CreateProject: React.FC = () => {
                 Category
               </label>
               <select
+                data-testid="category"
                 id="category"
                 className={`select select-bordered w-full ${
                   errors.category ? "select-error" : ""
@@ -203,6 +206,7 @@ const CreateProject: React.FC = () => {
                 Language
               </label>
               <input
+                data-testid="language"
                 id="language"
                 type="text"
                 placeholder="Enter programming language"
@@ -219,6 +223,7 @@ const CreateProject: React.FC = () => {
                 Description
               </label>
               <textarea
+                data-testid="description"
                 id="description"
                 className="textarea textarea-bordered w-full"
                 placeholder="Enter project description"
@@ -229,6 +234,7 @@ const CreateProject: React.FC = () => {
             <div className="flex items-center justify-between">
               {user && user.userType === "Client" && (
                 <button
+                  data-testid="submit-button"
                   id="submit-button"
                   type="submit"
                   className="btn btn-primary"
