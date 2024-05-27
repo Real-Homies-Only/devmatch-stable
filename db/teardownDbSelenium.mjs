@@ -18,6 +18,9 @@ const teardownDatabase = async () => {
   await prisma.bids.deleteMany();
   await prisma.projects.deleteMany();
   await prisma.users.deleteMany();
+  await prisma.ratings.deleteMany();
+  await prisma.messages.deleteMany();
+  await prisma.task.deleteMany();
 
   await prisma.$disconnect();
 };
