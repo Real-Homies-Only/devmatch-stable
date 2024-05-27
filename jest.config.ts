@@ -16,7 +16,7 @@ const config: Config = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   coverageDirectory: "coverage",
   testEnvironment: "jsdom",
-  testRegex: "/__tests__/.*\\.test\\.tsx$",
+  testRegex: "/__tests__/.*\\.test\\.(ts|tsx)$",
   transform: {
     "^.+\\.tsx?$": "@swc/jest"
   },
