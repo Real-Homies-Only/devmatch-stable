@@ -350,7 +350,7 @@ describe("Selenium Automated Test", () => {
         await sampleProjectButton.click();
       }
 
-      await driver.wait(until.elementLocated({ id: "bid-0" }), 5000);
+      await driver.wait(until.elementLocated({ id: "bid-0" }), 10000);
       const acceptBidButton = await driver.findElement({ id: "bid-0" });
       await acceptBidButton.click();
       const confirmButton = await getElementById("accept-bid-button", driver);
@@ -360,6 +360,109 @@ describe("Selenium Automated Test", () => {
         until.elementLocated({ id: "project-dashboard" }),
         15000
       );
+    }, 30000);
+    afterAll(async () => {
+      await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
+      const accountButton = await driver.findElement({ id: "account-button" });
+      await accountButton.click();
+
+      const logoutButtonElement = await driver.wait(
+        until.elementLocated({ id: "logout-button" }),
+        10000
+      );
+      ``;
+      await driver.wait(async () => {
+        const isEnabled = await logoutButtonElement.isEnabled();
+        const isDisplayed = await logoutButtonElement.isDisplayed();
+        return isEnabled && isDisplayed;
+      }, 10000);
+
+      await logoutButtonElement.click();
+    });
+  });
+
+  describe("Developer Automated Test", () => {
+    const developerEmail = "developer123@gmail.com";
+    const password = "123456";
+
+    it("login as a client", async () => {
+      await driver.get(rootUrl);
+      setTimeout(() => {}, 10000);
+
+      await driver.get(rootUrl);
+      setTimeout(() => {}, 10000);
+
+      const loginButton = await getElementById("login-button", driver);
+      await loginButton.click();
+
+      await driver.wait(until.urlContains("/login"), 10000);
+      const emailInput = await getElementById("email", driver);
+      const passwordInput = await getElementById("password", driver);
+      const submitButton = await getElementById("submit", driver);
+
+      await emailInput.sendKeys(developerEmail);
+      await passwordInput.sendKeys(password);
+      await submitButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+    }, 30000);
+
+    it("click the browse a project button ", async () => {
+      await driver.get(rootUrl);
+      await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
+      await driver.wait(
+        until.elementLocated({ id: "browse-project-button" }),
+        5000
+      );
+      const projectsButton = await driver.findElement({
+        id: "browse-project-button"
+      });
+      await projectsButton.click();
+
+      await driver.wait(until.urlContains("/projects"), 10000);
+    });
+
+    it("renders project modal", async () => {
+      const projectCardsContainer = await driver.wait(
+        until.elementLocated({ id: "project-cards-container" }),
+        10000
+      );
+      const firstProjectCard = await projectCardsContainer.findElement({
+        id: "project-card-1"
+      });
+      await firstProjectCard.click();
+      await driver.wait(until.elementLocated({ id: "my_modal_3" }), 10000);
+      const projectModal = await driver.findElement({ id: "my_modal_3" });
+      expect(await projectModal.isDisplayed()).toBe(true);
+    }, 10000);
+
+    it("clicks on bid button and navigates to bid page and submit a bid", async () => {
+      const bidButton = await driver.findElement({ id: "bid-button" });
+      await bidButton.click();
+
+      const bidPageContainer = await driver.wait(
+        until.elementLocated({ id: "bid-page-container" }),
+        10000
+      );
+      expect(await bidPageContainer.isDisplayed()).toBe(true);
+
+      const bidCommentTextarea = await bidPageContainer.findElement({
+        id: "bid-comment-textarea"
+      });
+
+      const testBidComment = "Test Bid";
+      await bidCommentTextarea.sendKeys(testBidComment);
+
+      const submitButton = await bidPageContainer.findElement({
+        id: "submit-bid-button"
+      });
+      await submitButton.click();
+
+      const modal = await driver.wait(
+        until.elementLocated({ id: "success-bid-modal" }),
+        10000
+      );
+      expect(await modal.isDisplayed()).toBe(true);
     }, 30000);
   });
 });

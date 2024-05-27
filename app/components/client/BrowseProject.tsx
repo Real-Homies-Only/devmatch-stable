@@ -18,6 +18,7 @@ interface Project {
 const BrowseProject = () => {
   const { user, loading } = useContext(AuthContext);
   const router = useRouter();
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,16 +29,22 @@ const BrowseProject = () => {
     const fetchProjects = async () => {
       try {
         const response = await fetch("api/browse/${id}");
-
         const data = await response.json();
-        console.log(data);
-        if (Array.isArray(data)) {
-          setProjects(data);
+
+        if (response.ok) {
+          if (Array.isArray(data)) {
+            setProjects(data);
+          } else {
+            console.error("Expected an array of projects, but got:", data);
+            setProjects([]);
+          }
         } else {
-          console.error("Expected an array of projects, but got:", data);
+          console.error("Error fetching projects:", response.status);
+          setProjects([]);
         }
       } catch (error) {
         console.error("Error fetching projects:", error);
+        setProjects([]);
       }
     };
     fetchProjects();
@@ -62,25 +69,31 @@ const BrowseProject = () => {
 
   if (loading) {
     return (
-      <span className="loading loading-spinner loading-lg self-center justify-center"></span>
+      <span
+        data-testid="loading-spinner"
+        className="loading loading-spinner loading-lg self-center justify-center"
+      ></span>
     );
   }
 
   return (
     <div className="flex flex-col items-center min-h-screen relative pt-6">
       <div
+        id="project-cards-container"
         ref={projectsContainerRef}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"
       >
         {currentProjects.length === 0 ? (
-          <div className={`${Body.className}`}>
-            Woops, there are no current projects!
+          <div data-testid="no-projects-message">
+            {Body.className}Woops, there are no current projects!
           </div>
         ) : (
           Array.isArray(currentProjects) &&
-          currentProjects.map((project) => (
+          currentProjects.map((project, index) => (
             <div
               key={project.id}
+              id={`project-card-${index + 1}`}
+              data-testid={`project-card-${project.id}`}
               className="w-64 h-64 bg-white shadow-md rounded border border-primary p-4"
               onClick={() => handleProjectClick(project)}
             >
@@ -127,6 +140,7 @@ const BrowseProject = () => {
       {selectedProject && user && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <dialog
+            data-testid="project-modal"
             id="my_modal_3"
             className="modal"
             open={selectedProject !== null}
@@ -162,6 +176,8 @@ const BrowseProject = () => {
                   {selectedProject.description}
                 </p>
                 <button
+                  id="bid-button"
+                  data-testid="bid-button"
                   className="btn btn-sm float-right border-primary"
                   onClick={() =>
                     router.push(
