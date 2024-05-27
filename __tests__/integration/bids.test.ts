@@ -39,8 +39,6 @@ describe("Bid Tests", () => {
   });
 
   afterAll(async () => {
-    await prisma.bids.deleteMany();
-    await prisma.projects.deleteMany();
     await prisma.$disconnect();
     setTimeout(() => {}, 5000);
   });

@@ -37,8 +37,6 @@ describe("Task Tests", () => {
   });
 
   afterAll(async () => {
-    await prisma.task.deleteMany();
-    await prisma.projects.deleteMany();
     await prisma.$disconnect();
     setTimeout(() => {}, 5000);
   });
