@@ -1,5 +1,6 @@
 import { prisma } from "@/app/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserDataWithId } from "@/app/utils/getUserDataWithId";
 import crypto from "crypto";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
@@ -32,6 +33,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { error: "Client ID is required" },
         { status: 400 }
       );
+    }
+
+    const clientUser = await getUserDataWithId(clientId);
+    if (!clientUser) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
     if (photo === null) {
