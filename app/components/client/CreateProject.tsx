@@ -107,7 +107,6 @@ const CreateProject: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center"
         overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
         role="modal-info"
-
       >
         <div className="bg-white p-6 rounded-md shadow-md z-50">
           <h2 className="text-xl font-bold mb-4">{modalMessage}</h2>
@@ -158,6 +157,7 @@ const CreateProject: React.FC = () => {
                 Project Name
               </label>
               <input
+                id="projectName"
                 data-testid="project-name"
                 type="text"
                 placeholder="Enter project name"
