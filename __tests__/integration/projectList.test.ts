@@ -53,7 +53,7 @@ describe("Project List Tests", () => {
     expect(response.status).toBe(404);
   });
 
-  it("finds a valid user with no projects and return a 404 status code", async () => {
+  it("finds a valid user with projects and return a 202 status code", async () => {
     const requestObj = {
       method: "GET",
       headers: {
