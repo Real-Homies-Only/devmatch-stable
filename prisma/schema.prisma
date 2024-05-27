@@ -31,7 +31,7 @@ model Projects {
   description    String
   clientId       String
   developerId    String?
-  projectPicture String?   @default("defaultPhoto.png")
+  projectPicture String    @default("defaultPhoto.png")
   progress       Int       @default(0)
   finished       Boolean   @default(false)
   bid            Bids[]
