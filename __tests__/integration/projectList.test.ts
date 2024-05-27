@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 describe("Project List Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {

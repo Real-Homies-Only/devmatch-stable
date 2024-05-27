@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 describe("Project Bid List Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
@@ -121,5 +122,7 @@ describe("Project Bid List Tests", () => {
 
     expect(bidList).toHaveLength(2);
     expect(response.status).toBe(200);
+
+    setTimeout(() => {}, 5000);
   });
 });

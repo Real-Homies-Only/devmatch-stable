@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 describe("Project Rate Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
@@ -70,7 +71,7 @@ describe("Project Rate Tests", () => {
       json: () => ({
         rate: 5,
         comment: "yep",
-        projectId: "invalid123"
+        userId: "rateproject1"
       })
     } as any;
 

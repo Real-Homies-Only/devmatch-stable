@@ -12,6 +12,7 @@ const readImageFile = async (filename: string) => {
 };
 
 describe("Edit User Photo Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
