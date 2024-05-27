@@ -335,6 +335,7 @@ describe("Selenium Automated Test", () => {
     }, 30000);
 
     it("opens project and accepts a bid", async () => {
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
       await driver.wait(until.elementLocated({ id: "projects-button" }), 10000);
       const projectsButton = await driver.findElement({
         id: "projects-button"
