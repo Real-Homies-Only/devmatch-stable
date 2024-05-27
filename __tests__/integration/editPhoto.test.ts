@@ -43,13 +43,13 @@ describe("Edit User Photo Tests", () => {
       headers: {
         "Content-Type": "application/json"
       },
-      formData: async () => ({
+      json: async () => ({
         formData
       })
     } as any;
 
     const response = await PATCH(requestObj, { params: { id: "photouser" } });
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(202);
   });
 
   it("sends invalid formData and receives a 500 status code", async () => {
