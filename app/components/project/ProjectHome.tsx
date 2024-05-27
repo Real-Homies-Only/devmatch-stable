@@ -158,6 +158,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                 </div>
               ) : (
                 <button
+                  id="finish-project"
                   onClick={() => setIsModalOpen(true)}
                   className="btn btn-primary text-white"
                 >
@@ -166,6 +167,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
               )}
               <Modal
                 isOpen={isModalOpen}
+                id="finish-project-modal"
                 contentLabel="Project Finished?"
                 className="fixed inset-0 z-50 flex items-center justify-center mx-4"
                 overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
@@ -180,7 +182,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                       onSubmit={handleSubmit(onSubmit)}
                       className="flex flex-col"
                     >
-                      <div className="rating rating-md">
+                      <div id="rating" className="rating rating-md">
                         <Controller
                           name="rating"
                           control={control}
@@ -203,6 +205,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                                 onChange={() => field.onChange(2)}
                               />
                               <input
+                                id="rating-3"
                                 type="radio"
                                 {...field}
                                 value={3}
@@ -240,6 +243,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                         control={control}
                         render={({ field }) => (
                           <textarea
+                            id="comment"
                             className={`${Body.className} w-full h-32 border border-gray-300 rounded-lg p-2`}
                             placeholder="Write a comment about the developer..."
                             {...field}
@@ -250,6 +254,7 @@ const ProjectHome: React.FC<ProjectHomeProps> = ({ project, client, user }) => {
                         <p className="text-red-500">{errors.comment.message}</p>
                       )}
                       <button
+                        id="submit-rating"
                         type="submit"
                         className={`btn btn-primary ${Body.className} mt-2`}
                       >
