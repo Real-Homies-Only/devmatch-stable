@@ -139,6 +139,7 @@ const Column: React.FC<ColumnProps> = ({
 
   return (
     <div
+      id={`${column.toLowerCase()}-column`}
       data-testid={`${column.toLowerCase()}-column`}
       className="w-full sm:w-56 shrink-0 md:w-64 lg:w-72"
     >
