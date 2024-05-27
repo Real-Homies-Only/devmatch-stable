@@ -40,13 +40,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
-    const user = await prisma.users.findUnique({
-      where: { id: clientUser.id }
-    });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     if (photo === null) {
       return NextResponse.json({ error: "No photo provided" }, { status: 400 });
     } else if (photo instanceof File) {
