@@ -12,6 +12,13 @@ npm run dev
 yarn dev
 ```
 
+Run the production server:
+
+```bash
+npm run build
+npm run start
+```
+
 Open [http://localhost:3000](http://localhost:3000) to access the web app.
 
 ## Accessing environmental variables
@@ -24,7 +31,9 @@ through this [Google Drive](https://drive.google.com/drive/folders/15DJ6Q3sGVdlK
 Make sure to use the testing environmental variables before running tests and put the **firebase-admin.json** in the root folder.
 
 ```bash
-npm test
+npm run test:integration
+npm run test:unit
+npm run test:selenium
 ```
 
 Change the **assert** to **with** or vice versa in the **/db/teardownDb.mjs** file for varying Node.js versions
