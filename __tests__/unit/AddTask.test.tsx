@@ -9,6 +9,41 @@ import {
 } from "@/__mocks__/kanbanMock";
 import { TaskType } from "@/app/utils/KanbanProps";
 
+fetchMock.enableMocks();
+
+beforeEach(() => {
+  fetchMock.resetMocks();
+  jest.spyOn(global, "fetch").mockImplementation((url, options) => {
+    const method = (options?.method || "GET").toUpperCase();
+    const mockResponse =
+      mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
+
+    if (mockResponse) {
+      return Promise.resolve(
+        new Response(
+          JSON.stringify([
+            ...mockFetchResponses["/api/project/:projectId/kanban"].GET(),
+            {
+              column: "BACKLOG",
+              id: "new-task-id",
+              title: "New Task",
+              projectId: mockProject.id
+            }
+          ]),
+          {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        )
+      );
+    }
+
+    return Promise.reject(new Error("Unexpected fetch call"));
+  });
+});
+
 jest.mock("next/navigation", () => ({
   ...jest.requireActual("next/navigation"),
   useRouter: jest.fn().mockReturnValue({
@@ -26,47 +61,9 @@ jest.mock("next/navigation", () => ({
   })
 }));
 
-beforeEach(() => {
-  fetchMock.resetMocks();
-});
-
 describe("AddTask", () => {
-  beforeAll(() => {
-    fetchMock.enableMocks();
-  });
-
   it("adds a new task", async () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation((url, options) => {
-      const method = (options?.method || "GET").toUpperCase();
-      const mockResponse =
-        mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
-
-      if (mockResponse) {
-        return Promise.resolve(
-          new Response(
-            JSON.stringify([
-              ...mockFetchResponses["/api/project/:projectId/kanban"].GET(),
-              {
-                column: "BACKLOG",
-                id: "new-task-id",
-                title: "New Task",
-                projectId: mockProject.id
-              }
-            ]),
-            {
-              status: 200,
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-          )
-        );
-      }
-
-      return Promise.reject(new Error("Unexpected fetch call"));
-    });
-
     render(
       <AddTask
         column="BACKLOG"
@@ -101,24 +98,6 @@ describe("AddTask", () => {
 
   it("does not add a task with an empty title", async () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation((url, options) => {
-      const method = (options?.method || "GET").toUpperCase();
-      const mockResponse =
-        mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
-
-      if (mockResponse) {
-        return Promise.resolve(
-          new Response(JSON.stringify(mockResponse(options?.body)), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-        );
-      }
-
-      return Promise.reject(new Error("Unexpected fetch call"));
-    });
 
     render(
       <AddTask
@@ -145,24 +124,6 @@ describe("AddTask", () => {
 
   it("does not add a task with more than 100 characters", async () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation((url, options) => {
-      const method = (options?.method || "GET").toUpperCase();
-      const mockResponse =
-        mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
-
-      if (mockResponse) {
-        return Promise.resolve(
-          new Response(JSON.stringify(mockResponse(options?.body)), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-        );
-      }
-
-      return Promise.reject(new Error("Unexpected fetch call"));
-    });
 
     render(
       <AddTask
@@ -191,24 +152,6 @@ describe("AddTask", () => {
 
   it("displays a character limit exceeded message when the limit is exceeded", async () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation((url, options) => {
-      const method = (options?.method || "GET").toUpperCase();
-      const mockResponse =
-        mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
-
-      if (mockResponse) {
-        return Promise.resolve(
-          new Response(JSON.stringify(mockResponse(options?.body)), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-        );
-      }
-
-      return Promise.reject(new Error("Unexpected fetch call"));
-    });
 
     render(
       <AddTask
@@ -238,9 +181,6 @@ describe("AddTask", () => {
 
   it("does not render the add task button for client users", () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation(() => {
-      return Promise.resolve(new Response(JSON.stringify([])));
-    });
 
     render(
       <AddTask
@@ -256,24 +196,6 @@ describe("AddTask", () => {
 
   it("cancels task creation when the close button is clicked", () => {
     const setTasks = jest.fn();
-    jest.spyOn(global, "fetch").mockImplementation((url, options) => {
-      const method = (options?.method || "GET").toUpperCase();
-      const mockResponse =
-        mockFetchResponses["/api/project/:projectId/kanban"]?.[method];
-
-      if (mockResponse) {
-        return Promise.resolve(
-          new Response(JSON.stringify(mockResponse(options?.body)), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-        );
-      }
-
-      return Promise.reject(new Error("Unexpected fetch call"));
-    });
 
     render(
       <AddTask
