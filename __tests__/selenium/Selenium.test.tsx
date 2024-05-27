@@ -361,88 +361,215 @@ describe("Selenium Automated Test", () => {
         15000
       );
     }, 30000);
+  });
 
-    describe("Login as a developer", () => {
-      it("logs out client account", async () => {
+  describe("Developer Automated Test", () => {
+    it("logs out client account", async () => {
+      await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
+
+      const accountButton = await driver.findElement({
+        id: "account-button"
+      });
+      await accountButton.click();
+
+      await driver.wait(until.elementLocated({ id: "logout-button" }), 5000);
+      const logoutButton = await driver.findElement({ id: "logout-button" });
+      await logoutButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+    }, 30000);
+
+    it("redirects to login after clicking 'Login Button'", async () => {
+      await driver.get(rootUrl);
+      setTimeout(() => {}, 10000);
+
+      const loginButton = await getElementById("login-button", driver);
+      await loginButton.click();
+
+      await driver.wait(until.urlContains("/login"), 10000);
+      const currentUrl = await driver.getCurrentUrl();
+
+      expect(currentUrl).toContain("/login");
+    }, 30000);
+
+    it("have the login form", async () => {
+      const loginForm = await getElementById("login-form", driver);
+      expect(loginForm).toBeTruthy();
+    }, 30000);
+
+    it("login as a developer with valid credentials", async () => {
+      const emailInput = await getElementById("email", driver);
+      const passwordInput = await getElementById("password", driver);
+      const submitButton = await getElementById("submit", driver);
+
+      await emailInput.sendKeys("developer123@gmail.com");
+      await passwordInput.sendKeys("123456");
+      await submitButton.click();
+
+      await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
+    }, 30000);
+  });
+
+  describe("Developer Projects", () => {
+    it("clicks projects button and selects a project", async () => {
+      await driver.get(rootUrl);
+      setTimeout(() => {}, 10000);
+
+      await driver.wait(until.elementLocated({ id: "projects-button" }), 10000);
+      const projectsButton = await driver.findElement({
+        id: "projects-button"
+      });
+
+      if (projectsButton) {
+        await projectsButton.click();
+        await driver.wait(until.elementLocated({ id: "project-0" }), 5000);
+        const sampleProjectButton = await driver.findElement({
+          id: "project-0"
+        });
+        await sampleProjectButton.click();
+      }
+
+      await driver.wait(
+        until.elementLocated({ id: "project-dashboard" }),
+        15000
+      );
+    }, 30000);
+
+    it("clicks the 'Kanban Board' button", async () => {
+      await driver.wait(until.elementLocated({ id: "project-kanban" }), 10000);
+      const kanbanButton = await driver.findElement({ id: "project-kanban" });
+      await kanbanButton.click();
+    }, 30000);
+
+    describe("Kanban Board", () => {
+      it("does not add a task with an empty title", async () => {
         await driver.wait(
-          until.elementLocated({ id: "account-button" }),
+          until.elementLocated({ id: "add-task-button" }),
           10000
         );
-
-        const accountButton = await driver.findElement({
-          id: "account-button"
+        const addTaskButton = await driver.findElement({
+          id: "add-task-button"
         });
-        await accountButton.click();
 
-        await driver.wait(until.elementLocated({ id: "logout-button" }), 5000);
-        const logoutButton = await driver.findElement({ id: "logout-button" });
-        await logoutButton.click();
+        await addTaskButton.click();
 
-        await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
-      }, 30000);
+        await driver.wait(
+          until.elementLocated({ id: "add-task-textarea" }),
+          5000
+        );
+        const taskNameInput = await driver.findElement({
+          id: "add-task-textarea"
+        });
+        const submitButton = await driver.findElement({
+          id: "add-task-submit-button"
+        });
+        const closeButton = await driver.findElement({
+          id: "add-taskclose-button"
+        });
 
-      it("redirects to login after clicking 'Login Button'", async () => {
-        await driver.get(rootUrl);
-        setTimeout(() => {}, 10000);
-
-        const loginButton = await getElementById("login-button", driver);
-        await loginButton.click();
-
-        await driver.wait(until.urlContains("/login"), 10000);
-        const currentUrl = await driver.getCurrentUrl();
-
-        expect(currentUrl).toContain("/login");
-      }, 30000);
-
-      it("have the login form", async () => {
-        const loginForm = await getElementById("login-form", driver);
-        expect(loginForm).toBeTruthy();
-      }, 30000);
-
-      it("login with valid credentials", async () => {
-        const emailInput = await getElementById("email", driver);
-        const passwordInput = await getElementById("password", driver);
-        const submitButton = await getElementById("submit", driver);
-
-        await emailInput.sendKeys("developer123@gmail.com");
-        await passwordInput.sendKeys("123456");
+        await taskNameInput.sendKeys("");
         await submitButton.click();
+        await closeButton.click();
+      });
 
-        await driver.wait(until.urlIs("http://localhost:3000/"), 10000);
-      }, 30000);
-    });
-
-    describe("Developer Projects", () => {
-      it("clicks projects button and selects a project", async () => {
-        await driver.get(rootUrl);
-        setTimeout(() => {}, 10000);
-
+      it("does not add a task that exceeds 100 characters", async () => {
         await driver.wait(
-          until.elementLocated({ id: "projects-button" }),
+          until.elementLocated({ id: "add-task-button" }),
           10000
         );
-        const projectsButton = await driver.findElement({
-          id: "projects-button"
+        const addTaskButton = await driver.findElement({
+          id: "add-task-button"
         });
 
-        if (projectsButton) {
-          await projectsButton.click();
-          await driver.wait(until.elementLocated({ id: "project-0" }), 5000);
-          const sampleProjectButton = await driver.findElement({
-            id: "project-0"
-          });
-          await sampleProjectButton.click();
-        }
+        await addTaskButton.click();
 
         await driver.wait(
-          until.elementLocated({ id: "project-dashboard" }),
-          15000
+          until.elementLocated({ id: "add-task-textarea" }),
+          5000
         );
+        const taskNameInput = await driver.findElement({
+          id: "add-task-textarea"
+        });
+        const submitButton = await driver.findElement({
+          id: "add-task-submit-button"
+        });
+
+        await taskNameInput.sendKeys(
+          "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean ma"
+        );
+        await submitButton.click();
+        await driver.wait(
+          until.elementLocated({ id: "character-limit-exceeded" }),
+          5000
+        );
+      });
+
+      it("cancels task creation when close button is clicked", async () => {
+        await driver.wait(
+          until.elementLocated({ id: "add-task-button" }),
+          10000
+        );
+        const addTaskButton = await driver.findElement({
+          id: "add-task-button"
+        });
+
+        await addTaskButton.click();
+
+        await driver.wait(
+          until.elementLocated({ id: "add-task-textarea" }),
+          5000
+        );
+        const closeButton = await driver.findElement({
+          id: "add-task-close-button"
+        });
+        await closeButton.click();
+      });
+
+      it("creates a task in Backlog Column", async () => {
+        await driver.wait(
+          until.elementLocated({ id: "backlog-column" }),
+          10000
+        );
+        await driver.wait(
+          until.elementLocated({ id: "add-task-button" }),
+          10000
+        );
+        const addTaskButton = await driver.findElement({
+          id: "add-task-button"
+        });
+
+        await addTaskButton.click();
+
+        await driver.wait(
+          until.elementLocated({ id: "add-task-textarea" }),
+          5000
+        );
+        const taskNameInput = await driver.findElement({
+          id: "add-task-textarea"
+        });
+        const submitButton = await driver.findElement({
+          id: "add-task-submit-button"
+        });
+
+        await taskNameInput.sendKeys("Test Task");
+        await submitButton.click();
       }, 30000);
 
-      // it("clicks the 'Kanban Board' button", async () => {
-      //   await driver.wait(until.elementLocated({ id: "project-kanban" }), 10000);
-      // }, 30000);
+      it("moves a task to another column", async () => {
+        await driver.wait(until.elementLocated({ id: "task-0" }), 10000);
+        const task = await driver.findElement({ id: "task-0" });
+        const column = await driver.findElement({ id: "todo-column" });
+
+        await driver.actions().dragAndDrop(task, column).perform();
+      });
+
+      it("deletes a task", async () => {
+        await driver.wait(until.elementLocated({ id: "task-0" }), 10000);
+        const task = await driver.findElement({ id: "task-0" });
+        const deleteBox = await driver.findElement({ id: "delete-box" });
+
+        await driver.actions().dragAndDrop(task, deleteBox).perform();
+      }, 30000);
     });
   });
 });
