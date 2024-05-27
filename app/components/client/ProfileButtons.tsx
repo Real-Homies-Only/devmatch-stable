@@ -101,7 +101,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
                   <div
                     id={`project-${index}`}
                     onClick={() => router.push(`/project/${project.id}`)}
-                    className="hover:bg-gray-100 border-y border-secondary btn btn-ghost justify-start flex"
+                    className="hover:bg-gray-100 border-y border-secondary justify-start flex"
                   >
                     <span className="flex flex-row gap-3 items-center">
                       <span

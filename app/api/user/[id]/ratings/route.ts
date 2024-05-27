@@ -39,6 +39,16 @@ export async function GET(
         }
       });
 
+      const user = await prisma.users.findUnique({
+        where: {
+          id: idString
+        }
+      });
+
+      if (!user) {
+        throw new Error("User not found!");
+      }
+
       if (ratings.length === 0) {
         throw new Error("No projects found!");
       }

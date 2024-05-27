@@ -25,6 +25,15 @@ export async function GET(
       throw new Error("ID params not found!");
     } else {
       const idString = params.id;
+
+      const project = await prisma.projects.findUnique({
+        where: { id: idString }
+      });
+
+      if (!project) {
+        throw new Error("No project found!");
+      }
+
       const bids = await prisma.bids.findMany({
         where: {
           projectId: idString
@@ -57,7 +66,7 @@ export async function GET(
     }
   } catch (err) {
     await prisma.$disconnect();
-    return NextResponse.json({ status: 404 });
+    return NextResponse.json({ bidList: null }, { status: 404 });
   } finally {
     await prisma.$disconnect();
   }

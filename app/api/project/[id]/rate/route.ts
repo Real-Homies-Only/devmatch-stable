@@ -13,6 +13,17 @@ export async function POST(
     } else {
       const idString = params.id;
 
+      const project = await prisma.projects.findUnique({
+        where: { id: idString }
+      });
+
+      if (!project) {
+        return NextResponse.json(
+          { message: "No project found!" },
+          { status: 404 }
+        );
+      }
+
       const existingRating = await prisma.ratings.findFirst({
         where: {
           projectId: idString
@@ -40,13 +51,14 @@ export async function POST(
       }
 
       await prisma.$disconnect();
-      return NextResponse.json({ rating }, { status: 200 });
+      return NextResponse.json({ rating }, { status: 201 });
     }
   } catch (err) {
+    console.log(err);
     await prisma.$disconnect();
     return NextResponse.json(
-      { message: "Error finishing project!" },
-      { status: 404 }
+      { message: "Error finishing project!", rating: null },
+      { status: 400 }
     );
   } finally {
     await prisma.$disconnect();
