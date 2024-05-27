@@ -14,11 +14,26 @@ export async function GET(
       throw new Error("ID params not found!");
     } else {
       const idString = params.id;
+
+      const project = await prisma.projects.findFirst({
+        where: {
+          id: idString
+        }
+      });
+
+      if (!project) {
+        return NextResponse.json({ messages: null }, { status: 404 });
+      }
+
       const messages = await prisma.messages.findMany({
         where: {
           projectId: idString
         }
       });
+
+      if (!messages || messages.length === 0) {
+        throw new Error("Messages not found!");
+      }
 
       const formatDateOrTime = (date: Date) => {
         const now = new Date();
@@ -46,7 +61,7 @@ export async function GET(
     }
   } catch (err) {
     await prisma.$disconnect();
-    return NextResponse.json({ status: 404 });
+    return NextResponse.json({ messages: null }, { status: 404 });
   } finally {
     await prisma.$disconnect();
   }
@@ -77,11 +92,11 @@ export async function POST(
       });
 
       await prisma.$disconnect();
-      return NextResponse.json({ message }, { status: 200 });
+      return NextResponse.json({ message }, { status: 201 });
     }
   } catch (err) {
     await prisma.$disconnect();
-    return NextResponse.json({ message: null }, { status: 404 });
+    return NextResponse.json({ message: null }, { status: 406 });
   } finally {
     await prisma.$disconnect();
   }

@@ -106,8 +106,8 @@ const CreateProject: React.FC = () => {
         contentLabel="Project Creation Result"
         className="fixed inset-0 z-50 flex items-center justify-center"
         overlayClassName="fixed inset-0 z-40 bg-gray-500 bg-opacity-75"
-        appElement={document.getElementById("root") || undefined}
         role="modal-info"
+
       >
         <div className="bg-white p-6 rounded-md shadow-md z-50">
           <h2 className="text-xl font-bold mb-4">{modalMessage}</h2>
