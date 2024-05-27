@@ -22,7 +22,7 @@ const BidForm: React.FC = () => {
     console.log("Submitting bid:", { bidComment, userId: developerId });
 
     try {
-      const response = await fetch(`/api/ProjectBid/${projectId}`, {
+      const response = await fetch(`/api/bids/${projectId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bidComment, userId: developerId })
@@ -48,8 +48,12 @@ const BidForm: React.FC = () => {
   };
 
   return (
-    <div className={`${Body.className} p-4 border border-gray-300 rounded-lg`}>
+    <div
+      id="bid-page-container"
+      className={`${Body.className} p-4 border border-gray-300 rounded-lg`}
+    >
       <Modal
+        id="success-bid-modal"
         isOpen={isModalOpen}
         contentLabel="Bid REsult"
         className="fixed inset-0 z-50 flex items-center justify-center"
@@ -74,8 +78,9 @@ const BidForm: React.FC = () => {
         </div>
       </Modal>
       <div className={`${Headings.className} text-xl mb-2`}>Submit a Bid</div>
-      <form onSubmit={handleSubmit}>
+      <form id="bid-form" onSubmit={handleSubmit}>
         <textarea
+          id="bid-comment-textarea"
           className={`${Body.className} w-full h-32 border border-gray-300 rounded-lg p-2`}
           placeholder="Enter your bid comment..."
           value={bidComment}
@@ -83,6 +88,7 @@ const BidForm: React.FC = () => {
           required
         />
         <button
+          id="submit-bid-button"
           type="submit"
           className={`btn btn-primary ${Body.className} mt-2`}
         >

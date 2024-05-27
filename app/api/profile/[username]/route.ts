@@ -16,6 +16,11 @@ export async function GET(
     } else {
       const usernameString = params.username;
       const user = await getUserDataWithUsername(usernameString);
+
+      if (!user) {
+        throw new Error("User not found!");
+      }
+
       return NextResponse.json({ user }, { status: 200 });
     }
   } catch (err) {

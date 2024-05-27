@@ -42,6 +42,8 @@ const DeleteBox: React.FC<DeleteBoxProps> = ({
 
   return (
     <div
+      id="delete-box"
+      data-testid="delete-box"
       onDrop={handleDragEnd}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}

@@ -31,6 +31,7 @@ export type TaskProps = TaskType & {
 export type DropIndicatorProps = {
   beforeId: string | null;
   column: string;
+  opacity?: number;
 };
 
 export type DeleteBoxProps = {

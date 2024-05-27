@@ -51,7 +51,14 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
 
       getOtherUserId();
     }
-  }, [otherUser, user, project, router]);
+  }, [
+    project.id,
+    project.clientId,
+    project.developerId,
+    project.finished,
+    user,
+    router
+  ]);
 
   if (loading) {
     return (
@@ -63,7 +70,7 @@ const Dashboard: React.FC<DashboardProps> = ({ project }) => {
     <Fragment>
       {project.developerId ? (
         project && user && otherUser ? (
-          <div className="flex flex-col self-center">
+          <div id="project-dashboard" className="flex flex-col self-center">
             <div className="flex">
               {selected === 1 ? (
                 <ProjectHome

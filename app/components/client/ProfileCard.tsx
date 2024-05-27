@@ -9,6 +9,7 @@ import { AuthContext } from "@/app/context/AuthContext";
 import { Body, Headings } from "@/app/fonts/roboto";
 import { mdiPencil } from "@mdi/js";
 import EditProfile from "./EditProfile";
+import Ratings from "./Ratings";
 
 const ProfileCard = () => {
   const { user, loading } = useContext(AuthContext);
@@ -68,7 +69,7 @@ const ProfileCard = () => {
   return (
     <Fragment>
       {user ? (
-        <div className="flex">
+        <div className="flex flex-col items-center mx-12">
           <div
             className={`${Body.className} artboard rounded-xl gap-2 border-letter lg:border flex flex-col flex-1 py-12 w-full lg:mx-12 mx-4 mt-4 lg:shadow-md`}
           >
@@ -78,6 +79,7 @@ const ProfileCard = () => {
               >
                 <Image
                   className=""
+                  data-testid="profile-picture"
                   src={user.profilePicture}
                   alt="Profile Picture"
                   width={480}
@@ -130,7 +132,11 @@ const ProfileCard = () => {
                 </Modal>
               </span>
             </div>
-            <div className="self-center text-letter text-center">
+
+            <div
+              data-testid="profile"
+              className="self-center text-letter text-center"
+            >
               {isEditing ? (
                 <Fragment>
                   <div className="mt-4 mx-4">
@@ -174,6 +180,13 @@ const ProfileCard = () => {
               )}
             </div>
           </div>
+          {user.userType === "Developer" && (
+            <div
+              className={`${Body.className} artboard rounded-xl gap-2 border-letter lg:border flex flex-col w-full py-12 lg:mx-12 mx-4 mt-4 lg:shadow-md`}
+            >
+              <Ratings profile={user} />
+            </div>
+          )}
         </div>
       ) : (
         <div></div>

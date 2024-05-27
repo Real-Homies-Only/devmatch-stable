@@ -14,7 +14,9 @@ import { Body } from "@/app/fonts/roboto";
 
 const RegisterFormSchema = z
   .object({
-    displayName: z.string().min(2),
+    displayName: z
+      .string()
+      .min(2, "Display name should be more than 2 characters"),
     username: z
       .string()
       .min(4, "Username should be more than 4 characters")
@@ -113,6 +115,8 @@ const RegisterForm = () => {
         </div>
       </Modal>
       <form
+        data-testid="register-form"
+        id="register-form"
         onSubmit={handleSubmit(handleRegister)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
       >
@@ -122,6 +126,7 @@ const RegisterForm = () => {
               Display Name
             </span>
             <input
+              id="display-name"
               type="text"
               className="grow"
               placeholder="AJ Aparicio"
@@ -140,6 +145,7 @@ const RegisterForm = () => {
               Username
             </span>
             <input
+              id="username"
               type="text"
               className="grow"
               placeholder="aj.aparicio36"
@@ -156,6 +162,7 @@ const RegisterForm = () => {
           <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
             <span className="border-r border-primary pr-2 text-sm">Email</span>
             <input
+              id="email"
               type="text"
               className="grow"
               placeholder="email@gmail.com"
@@ -172,6 +179,7 @@ const RegisterForm = () => {
               Password
             </span>
             <input
+              id="password"
               type="password"
               className="grow"
               placeholder="******"
@@ -190,6 +198,7 @@ const RegisterForm = () => {
               Confirm Password
             </span>
             <input
+              id="confirm-password"
               type="password"
               className="grow"
               placeholder="******"
@@ -204,14 +213,16 @@ const RegisterForm = () => {
         </div>
         <div className="gap-1 self-center">
           <select
+            data-testid="user-type"
+            id="user-type"
             className="select select-primary w-full max-w-xs"
             {...register("userType")}
           >
             <option disabled selected>
               What will you be on our platform?
             </option>
-            <option>Developer</option>
-            <option>Client</option>
+            <option id="developer">Developer</option>
+            <option id="client">Client</option>
           </select>
           {errors.userType && (
             <span className="text-letter mt-2">
@@ -220,12 +231,16 @@ const RegisterForm = () => {
           )}
         </div>
         {errorMessage && (
-          <div className="self-center">
+          <div id="error-message" className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
-        <div className="flex flex-1 flex-row self-center gap-8 items-center">
+        <div
+          data-testid="buttons"
+          className="flex flex-1 flex-row self-center gap-8 items-center"
+        >
           <button
+            id="submit"
             type="submit"
             className="btn btn-outline btn-primary self-start"
           >

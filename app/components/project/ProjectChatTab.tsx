@@ -78,7 +78,7 @@ const ProjectChatTab: React.FC<ProjectChatTabProps> = ({
                 <div className={`chat chat-end `} key={index}>
                   <div
                     className="chat-image avatar flex items-start justify-start"
-                    onClick={() => router.push(`/profile/${sender.username}`)}
+                    onClick={() => router.push(`/user/${sender.username}`)}
                   >
                     <div className="w-10 rounded-full">
                       <Image

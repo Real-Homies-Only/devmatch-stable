@@ -24,7 +24,7 @@ export async function GET(
         throw new Error("No projects found!");
       }
       await prisma.$disconnect();
-      return NextResponse.json({ projects }, { status: 200 });
+      return NextResponse.json({ projects }, { status: 202 });
     }
   } catch (err) {
     await prisma.$disconnect();

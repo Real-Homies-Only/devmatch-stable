@@ -59,7 +59,10 @@ const Board: React.FC<BoardProps> = ({ projectId, userType }) => {
   }, [projectId, userType]);
 
   return (
-    <div className="flex flex-col h-full w-full gap-3 overflow-scroll p-4 md:p-6 lg:p-12 relative max-h-70 lg:max-h-full">
+    <div
+      data-testid="board-test"
+      className="flex flex-col h-[calc(80vh)] w-full gap-3 overflow-scroll p-4 md:p-6 lg:p-12 relative max-h-70 lg:max-h-full"
+    >
       <div className="flex flex-wrap gap-3">
         <Column
           title="Backlog"

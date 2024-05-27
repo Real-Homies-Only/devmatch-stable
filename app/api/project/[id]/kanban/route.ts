@@ -17,11 +17,22 @@ export async function GET(
         projectId: idString
       }
     });
-    return NextResponse.json(tasks);
+    const project = await prisma.projects.findFirst({
+      where: {
+        id: idString
+      }
+    });
+    if (!project) {
+      throw new Error("Project not found!");
+    }
+    if (!tasks) {
+      throw new Error("Tasks not found!");
+    }
+    return NextResponse.json(tasks, { status: 200 });
   } catch (err) {
     return NextResponse.json(
       { message: "Error fetching tasks" },
-      { status: 500 }
+      { status: 404 }
     );
   } finally {
     await prisma.$disconnect();
@@ -82,7 +93,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       }
     });
 
-    return NextResponse.json(updatedTask, { status: 200 });
+    return NextResponse.json(updatedTask, { status: 202 });
   } catch (err) {
     return NextResponse.json(
       { message: "Error updating task" },

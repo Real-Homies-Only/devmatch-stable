@@ -55,7 +55,10 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
             onClick={() => router.push("/projects/create")}
             className="btn btn-ghost btn-circle lg:w-36 hover:bg-gray-100"
           >
-            <div className="flex flex-row justify-center items-center gap-2">
+            <div
+              id="create-project-button"
+              className="flex flex-row justify-center items-center gap-2"
+            >
               <Icon path={mdiPencil} size={0.8} />
               <span className="lg:block hidden">Create Project</span>
             </div>
@@ -65,7 +68,10 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
             onClick={() => router.push("/projects")}
             className="btn btn-ghost btn-circle lg:w-36 hover:bg-gray-100"
           >
-            <div className="flex flex-row justify-center items-center gap-2">
+            <div
+              id="browse-project-button"
+              className="flex flex-row justify-center items-center gap-2"
+            >
               <Icon path={mdiMagnify} size={0.8} />
               <span className="lg:block hidden">Browse Projects</span>
             </div>
@@ -73,6 +79,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
         )}
 
         <div
+          id="projects-button"
           tabIndex={0}
           role="button"
           className="btn btn-ghost btn-circle mr-2 dropdown dropdown-bottom dropdown-end z-10 flex hover:bg-gray-100"
@@ -92,8 +99,9 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
               projects.map((project, index) => (
                 <li key={index}>
                   <div
+                    id={`project-${index}`}
                     onClick={() => router.push(`/project/${project.id}`)}
-                    className="hover:bg-gray-100 border-y border-secondary btn btn-ghost justify-start flex"
+                    className="hover:bg-gray-100 border-y border-secondary justify-start flex"
                   >
                     <span className="flex flex-row gap-3 items-center">
                       <span
@@ -119,6 +127,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
           className="btn btn-ghost btn-circle avatar dropdown dropdown-end z-10"
         >
           <div
+            id="account-button"
             className={`${Body.className} w-10 border-primary border z-10 rounded-full mt-1 shadow-md hover:border-secondary hover:border-2`}
           >
             <Image
@@ -136,6 +145,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
           >
             <li>
               <div
+                id="profile-button"
                 onClick={() => router.push("/profile")}
                 className="hover:bg-gray-100"
               >
@@ -147,7 +157,11 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
             </li>
 
             <li>
-              <div onClick={logout} className="hover:bg-gray-100">
+              <div
+                id="logout-button"
+                onClick={logout}
+                className="hover:bg-gray-100"
+              >
                 <a className="flex flex-row">
                   <Icon path={mdiDoorOpen} size={1} className="mr-2" />
                   <span>Sign Out</span>

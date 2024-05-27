@@ -50,7 +50,7 @@ const LoginForm = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col w-full items-center">
+      <div data-testid="loading" className="flex flex-col w-full items-center">
         <span className="loading loading-lg text-primary" />
       </div>
     );
@@ -91,6 +91,8 @@ const LoginForm = () => {
         Join DevMatch
       </div>
       <form
+        data-testid="login-form"
+        id="login-form"
         onSubmit={handleSubmit(handleLogin)}
         className={`${Body.className} self-center w-full flex flex-col gap-8`}
       >
@@ -98,6 +100,7 @@ const LoginForm = () => {
           <label className="shadow-sm input input-bordered border-primary flex items-center gap-2">
             <span className="border-r border-primary pr-2 text-sm">Email</span>
             <input
+              id="email"
               type="text"
               className="grow"
               placeholder="email@gmail.com"
@@ -117,6 +120,7 @@ const LoginForm = () => {
               Password
             </span>
             <input
+              id="password"
               type="password"
               className="grow"
               placeholder="******"
@@ -132,23 +136,31 @@ const LoginForm = () => {
         </div>
 
         {errorMessage && (
-          <div className="self-center">
+          <div id="error-message" className="self-center">
             <span className="text-sm text-red-700">{errorMessage}</span>
           </div>
         )}
 
         <div className="flex flex-1 flex-row self-center gap-8 items-center">
           <button
+            id="submit"
             type="submit"
             className="btn btn-outline btn-primary self-start"
           >
             Log In
           </button>
-          <div className="flex flex-col ">
-            <a href="/register" className="hover:underline cursor-pointer">
+          <div className="flex flex-col " data-testid="help">
+            <a
+              href="/register"
+              onClick={() => router.push("/register")}
+              className="hover:underline cursor-pointer"
+            >
               {"I don't have an account"}
             </a>
-            <a className="hover:underline cursor-pointer">
+            <a
+              onClick={() => router.push("/register")}
+              className="hover:underline cursor-pointer"
+            >
               {"I forgot my password"}
             </a>
           </div>

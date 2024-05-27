@@ -32,6 +32,7 @@ const ProjectMenu: React.FC<ProjectMenuProps> = ({ selected, setSelected }) => {
         </a>
       </li>
       <li
+        id="project-kanban"
         onClick={() => setSelected(3)}
         className={`hover:bg-gray-300 rounded-box ${selected === 3 && "bg-gray-300"}`}
       >

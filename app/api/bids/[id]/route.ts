@@ -5,7 +5,6 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-  console.log("Received POST request:", req.url);
   const { bidComment, userId } = await req.json();
 
   try {
@@ -16,6 +15,7 @@ export async function POST(
 
       const existingBid = await prisma.bids.findFirst({
         where: {
+          projectId: idString,
           userId: userId
         }
       });
