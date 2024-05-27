@@ -64,6 +64,17 @@ const setupDatabase = async () => {
     }
   });
 
+  await prisma.projects.create({
+    data: {
+      projectName: "Test Project",
+      category: "Web Development",
+      language: "JavaScript",
+      description: "Test Description",
+      clientId: client.user.uid,
+      developerId: developer.user.uid
+    }
+  });
+
   await prisma.bids.create({
     data: {
       projectId: project.id,
