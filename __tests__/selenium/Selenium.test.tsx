@@ -684,7 +684,7 @@ describe("Selenium Automated Test", () => {
             id: "in_progress-add-task-submit-button"
           });
 
-          await taskNameInput.sendKeys("Test Task");
+          await taskNameInput.sendKeys("0 Test Task");
           await submitButton.click();
         }, 30000);
 
@@ -711,24 +711,25 @@ describe("Selenium Automated Test", () => {
             id: "done-add-task-submit-button"
           });
 
-          await taskNameInput.sendKeys("Test Task");
+          await taskNameInput.sendKeys("1 Test Task");
           await submitButton.click();
         }, 30000);
 
         it("moves a task to another column", async () => {
+          setTimeout(() => {}, 5000);
           await driver.wait(until.elementLocated({ id: "task-0" }), 10000);
-          const task = await driver.findElement({ id: "task-0" });
-          const column = await driver.findElement({ id: "todo-column" });
-
-          await driver.actions().dragAndDrop(task, column).perform();
-        });
+          const draggable = await driver.findElement({ id: "task-0" });
+          const droppable = await driver.findElement({ id: "todo-column" });
+          const actions = driver.actions({ async: true });
+          await actions.dragAndDrop(draggable, droppable).perform();
+        }, 30000);
 
         it("deletes a task", async () => {
-          await driver.wait(until.elementLocated({ id: "task-0" }), 10000);
-          const task = await driver.findElement({ id: "task-0" });
-          const deleteBox = await driver.findElement({ id: "delete-box" });
-
-          await driver.actions().dragAndDrop(task, deleteBox).perform();
+          await driver.wait(until.elementLocated({ id: "task-1" }), 10000);
+          const draggable = await driver.findElement({ id: "task-1" });
+          const droppable = await driver.findElement({ id: "delete-box" });
+          const actions = driver.actions({ async: true });
+          await actions.dragAndDrop(draggable, droppable).perform();
         }, 30000);
       });
     });
