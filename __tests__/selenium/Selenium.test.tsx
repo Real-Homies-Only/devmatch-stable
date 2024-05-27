@@ -361,7 +361,13 @@ describe("Selenium Automated Test", () => {
         15000
       );
     }, 30000);
-    afterAll(async () => {
+  });
+
+  describe("Developer Automated Test", () => {
+    const developerEmail = "developer123@gmail.com";
+    const password = "123456";
+
+    it("logs out of developer account", async () => {
       await driver.wait(until.elementLocated({ id: "account-button" }), 10000);
       const accountButton = await driver.findElement({ id: "account-button" });
       await accountButton.click();
@@ -379,11 +385,6 @@ describe("Selenium Automated Test", () => {
 
       await logoutButtonElement.click();
     });
-  });
-
-  describe("Developer Automated Test", () => {
-    const developerEmail = "developer123@gmail.com";
-    const password = "123456";
 
     it("login as a client", async () => {
       await driver.get(rootUrl);
