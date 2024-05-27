@@ -37,9 +37,6 @@ describe("GET Projects", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(prisma.projects, "findMany").mockResolvedValue(mockProjects);
-    jest.mock("@aws-sdk/s3-request-presigner", () => ({
-      getSignedUrl: jest.fn()
-    }));
   });
 
   afterAll(async () => {
