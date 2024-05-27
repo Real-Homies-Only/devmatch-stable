@@ -43,9 +43,7 @@ describe("Edit User Photo Tests", () => {
       headers: {
         "Content-Type": "application/json"
       },
-      json: async () => ({
-        formData
-      })
+      formData: async () => formData
     } as any;
 
     const response = await PATCH(requestObj, { params: { id: "photouser" } });
