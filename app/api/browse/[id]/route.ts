@@ -39,6 +39,10 @@ export async function GET(): Promise<NextResponse> {
       }
     });
 
+    if (!projects || projects.length === 0) {
+      return NextResponse.json({ projects: null }, { status: 404 });
+    }
+
     const projectsWithSignedUrls = await Promise.all(
       projects.map(async (project) => {
         if (project.projectPicture) {

@@ -60,7 +60,7 @@ const AddTask: React.FC<AddTaskProps> = ({
       {adding ? (
         <motion.form layout onSubmit={handleSubmit} className="w-full">
           <textarea
-            id="add-task-textarea"
+            id={`${column.toLowerCase()}-add-task-textarea`}
             data-testid="add-task-textarea"
             onChange={handleTextChange}
             placeholder="Add new task..."
@@ -68,7 +68,7 @@ const AddTask: React.FC<AddTaskProps> = ({
           />
           <div className="mt-1.5 flex items-center justify-end gap-1.5">
             <button
-              id="add-task-close-button"
+              id={`${column.toLowerCase()}-add-task-close-button`}
               data-testid="add-task-close-button"
               onClick={() => setAdding(false)}
               className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
@@ -76,7 +76,7 @@ const AddTask: React.FC<AddTaskProps> = ({
               Close
             </button>
             <button
-              id="add-task-submit-button"
+              id={`${column.toLowerCase()}-add-task-submit-button`}
               data-testid="add-task-submit-button"
               type="submit"
               disabled={characterCount > maxCharacters}
@@ -104,7 +104,7 @@ const AddTask: React.FC<AddTaskProps> = ({
         <> </>
       ) : (
         <motion.button
-          id="add-task-button"
+          id={`${column.toLowerCase()}-add-task-button`}
           data-testid="add-task-button"
           layout
           onClick={() => setAdding(true)}

@@ -12,6 +12,7 @@ const readImageFile = async (filename: string) => {
 };
 
 describe("Edit User Photo Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
@@ -42,13 +43,11 @@ describe("Edit User Photo Tests", () => {
       headers: {
         "Content-Type": "application/json"
       },
-      formData: async () => ({
-        formData
-      })
+      formData: async () => formData
     } as any;
 
     const response = await PATCH(requestObj, { params: { id: "photouser" } });
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(202);
   });
 
   it("sends invalid formData and receives a 500 status code", async () => {

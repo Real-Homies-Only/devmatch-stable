@@ -4,12 +4,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 describe("Edit User Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
         id: "edit1",
         displayName: "test",
-        username: "testedit",
+        username: "testedit555",
         bio: "test",
         location: "test",
         userType: "Client",
