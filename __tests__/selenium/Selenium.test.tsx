@@ -453,24 +453,24 @@ describe("Selenium Automated Test", () => {
       describe("Kanban Board", () => {
         it("does not add a task that exceeds 100 characters", async () => {
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "backlog-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "backlog-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "backlog-add-task-textarea" }),
             5000
           );
           const taskNameInput = await driver.findElement({
-            id: "add-task-textarea"
+            id: "backlog-add-task-textarea"
           });
           const submitButton = await driver.findElement({
-            id: "add-task-submit-button"
+            id: "backlog-add-task-submit-button"
           });
 
           await taskNameInput.sendKeys(
@@ -485,21 +485,21 @@ describe("Selenium Automated Test", () => {
 
         it("cancels task creation when close button is clicked", async () => {
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "backlog-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "backlog-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "backlog-add-task-textarea" }),
             5000
           );
           const closeButton = await driver.findElement({
-            id: "add-task-close-button"
+            id: "backlog-add-task-close-button"
           });
           await closeButton.click();
         });
@@ -510,24 +510,24 @@ describe("Selenium Automated Test", () => {
             10000
           );
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "backlog-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "backlog-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "backlog-add-task-textarea" }),
             5000
           );
           const taskNameInput = await driver.findElement({
-            id: "add-task-textarea"
+            id: "backlog-add-task-textarea"
           });
           const submitButton = await driver.findElement({
-            id: "add-task-submit-button"
+            id: "backlog-add-task-submit-button"
           });
 
           await taskNameInput.sendKeys("Test Task");
@@ -537,24 +537,24 @@ describe("Selenium Automated Test", () => {
         it("creates a task in TO DO Column", async () => {
           await driver.wait(until.elementLocated({ id: "todo-column" }), 10000);
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "todo-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "todo-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "todo-add-task-textarea" }),
             5000
           );
           const taskNameInput = await driver.findElement({
-            id: "add-task-textarea"
+            id: "todo-add-task-textarea"
           });
           const submitButton = await driver.findElement({
-            id: "add-task-submit-button"
+            id: "todo-add-task-submit-button"
           });
 
           await taskNameInput.sendKeys("Test Task");
@@ -567,24 +567,24 @@ describe("Selenium Automated Test", () => {
             10000
           );
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "in_progress-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "in_progress-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "in_progress-add-task-textarea" }),
             5000
           );
           const taskNameInput = await driver.findElement({
-            id: "add-task-textarea"
+            id: "in_progress-add-task-textarea"
           });
           const submitButton = await driver.findElement({
-            id: "add-task-submit-button"
+            id: "in_progress-add-task-submit-button"
           });
 
           await taskNameInput.sendKeys("Test Task");
@@ -594,24 +594,24 @@ describe("Selenium Automated Test", () => {
         it("creates a task in Done Column", async () => {
           await driver.wait(until.elementLocated({ id: "done-column" }), 10000);
           await driver.wait(
-            until.elementLocated({ id: "add-task-button" }),
+            until.elementLocated({ id: "done-add-task-button" }),
             10000
           );
           const addTaskButton = await driver.findElement({
-            id: "add-task-button"
+            id: "done-add-task-button"
           });
 
           await addTaskButton.click();
 
           await driver.wait(
-            until.elementLocated({ id: "add-task-textarea" }),
+            until.elementLocated({ id: "done-add-task-textarea" }),
             5000
           );
           const taskNameInput = await driver.findElement({
-            id: "add-task-textarea"
+            id: "done-add-task-textarea"
           });
           const submitButton = await driver.findElement({
-            id: "add-task-submit-button"
+            id: "done-add-task-submit-button"
           });
 
           await taskNameInput.sendKeys("Test Task");

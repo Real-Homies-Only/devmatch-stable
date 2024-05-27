@@ -14,6 +14,7 @@ const Task: React.FC<TaskProps> = ({
     <>
       <DropIndicator beforeId={id} column={column} />
       <motion.div
+        id={`${column.toLowerCase()}`}
         data-testid="task-card"
         layout
         layoutId={id}
