@@ -40,13 +40,14 @@ export async function POST(
       }
 
       await prisma.$disconnect();
-      return NextResponse.json({ rating }, { status: 200 });
+      return NextResponse.json({ rating }, { status: 201 });
     }
   } catch (err) {
+    console.log(err);
     await prisma.$disconnect();
     return NextResponse.json(
       { message: "Error finishing project!" },
-      { status: 404 }
+      { status: 400 }
     );
   } finally {
     await prisma.$disconnect();
