@@ -79,6 +79,7 @@ const ProfileCard = () => {
               >
                 <Image
                   className=""
+                  data-testid="profile-picture"
                   src={user.profilePicture}
                   alt="Profile Picture"
                   width={480}
@@ -132,7 +133,10 @@ const ProfileCard = () => {
               </span>
             </div>
 
-            <div className="self-center text-letter text-center">
+            <div
+              data-testid="profile"
+              className="self-center text-letter text-center"
+            >
               {isEditing ? (
                 <Fragment>
                   <div className="mt-4 mx-4">

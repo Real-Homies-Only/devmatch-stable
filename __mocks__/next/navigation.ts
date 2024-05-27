@@ -1,4 +1,6 @@
-// __mocks__/next/navigation.ts
+// __mocks__/next.navigation.ts
+import { jest } from "@jest/globals";
+
 export const useRouter = jest.fn(() => ({
   asPath: "/",
   basePath: "",
