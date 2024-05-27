@@ -4,14 +4,14 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-describe("User Tests", () => {
+describe("User Profile Tests", () => {
   jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
-        id: "1",
+        id: "foreignprofile1",
         displayName: "test",
-        username: "test",
+        username: "testforeign1",
         bio: "test",
         location: "test",
         userType: "Client",
@@ -48,7 +48,9 @@ describe("User Tests", () => {
       }
     } as any;
 
-    const response = await GET(requestObj, { params: { id: "1" } });
+    const response = await GET(requestObj, {
+      params: { id: "foreignprofile1" }
+    });
     const { user } = await response.json();
 
     const { success } = UserSchema.safeParse(user);

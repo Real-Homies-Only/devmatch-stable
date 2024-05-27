@@ -68,7 +68,10 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
             onClick={() => router.push("/projects")}
             className="btn btn-ghost btn-circle lg:w-36 hover:bg-gray-100"
           >
-            <div className="flex flex-row justify-center items-center gap-2">
+            <div
+              id="browse-project-button"
+              className="flex flex-row justify-center items-center gap-2"
+            >
               <Icon path={mdiMagnify} size={0.8} />
               <span className="lg:block hidden">Browse Projects</span>
             </div>
@@ -98,7 +101,7 @@ const ProfileButtons: React.FC<ProfileButtonsProps> = ({
                   <div
                     id={`project-${index}`}
                     onClick={() => router.push(`/project/${project.id}`)}
-                    className="hover:bg-gray-100 border-y border-secondary btn btn-ghost justify-start flex"
+                    className="hover:bg-gray-100 border-y border-secondary justify-start flex"
                   >
                     <span className="flex flex-row gap-3 items-center">
                       <span

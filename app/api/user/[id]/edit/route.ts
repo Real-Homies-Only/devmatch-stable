@@ -116,16 +116,6 @@ export async function PUT(
       throw new Error("ID params not found!");
     }
 
-    const checkUser = await prisma.users.findFirst({
-      where: {
-        id: params.id
-      }
-    });
-
-    if (!checkUser) {
-      throw new Error("User not found!");
-    }
-
     const { displayName, username, bio, location } = await request.json();
 
     const data: profileData = { displayName, username, bio, location };
@@ -146,6 +136,16 @@ export async function PUT(
       data.location = location;
     }
 
+    const checkUser = await prisma.users.findFirst({
+      where: {
+        id: params.id
+      }
+    });
+
+    if (!checkUser) {
+      throw new Error("User not found!");
+    }
+
     if (Object.keys(data).length > 0) {
       await prisma.users.update({
         where: { id: params.id },
@@ -156,6 +156,7 @@ export async function PUT(
     const user = await getUserDataWithId(params.id);
     return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
+    console.log(err);
     return NextResponse.json({ user: null }, { status: 401 });
   } finally {
     await prisma.$disconnect();

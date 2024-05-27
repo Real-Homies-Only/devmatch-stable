@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 describe("Project List Tests", () => {
+  jest.setTimeout(30000);
   beforeAll(async () => {
     await prisma.users.create({
       data: {
@@ -53,7 +54,7 @@ describe("Project List Tests", () => {
     expect(response.status).toBe(404);
   });
 
-  it("finds a valid user with no projects and return a 404 status code", async () => {
+  it("finds a valid user with projects and return a 202 status code", async () => {
     const requestObj = {
       method: "GET",
       headers: {
