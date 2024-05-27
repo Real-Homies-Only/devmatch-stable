@@ -97,11 +97,11 @@ export async function PATCH(
       return NextResponse.json({ user }, { status: 202 });
     } else {
       await prisma.$disconnect;
-      return NextResponse.json({ status: 400 });
+      return NextResponse.json({ error: "Not a photo!" }, { status: 400 });
     }
   } catch (error) {
     console.error("Error uploading photo:", error);
-    return NextResponse.json({ status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -112,6 +112,20 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!params.id || params.id === "") {
+      throw new Error("ID params not found!");
+    }
+
+    const checkUser = await prisma.users.findFirst({
+      where: {
+        id: params.id
+      }
+    });
+
+    if (!checkUser) {
+      throw new Error("User not found!");
+    }
+
     const { displayName, username, bio, location } = await request.json();
 
     const data: profileData = { displayName, username, bio, location };
@@ -138,9 +152,11 @@ export async function PUT(
         data
       });
     }
-    return NextResponse.json({ status: 201 });
+
+    const user = await getUserDataWithId(params.id);
+    return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
-    return NextResponse.json({ status: 401 });
+    return NextResponse.json({ user: null }, { status: 401 });
   } finally {
     await prisma.$disconnect();
   }
