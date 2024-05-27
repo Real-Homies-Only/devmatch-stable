@@ -435,42 +435,6 @@ describe("Selenium Automated Test", () => {
         }
 
         await driver.wait(
-          until.elementLocated({ id: "projects-button" }),
-          10000
-        );
-
-        const projectsButton2 = await driver.findElement({
-          id: "projects-button"
-        });
-
-        if (projectsButton2) {
-          await projectsButton2.click();
-          await driver.wait(until.elementLocated({ id: "project-0" }), 5000);
-          const sampleProjectButton = await driver.findElement({
-            id: "project-0"
-          });
-
-          setTimeout(() => {}, 10000);
-          await sampleProjectButton.click();
-        }
-
-        await driver.wait(
-          until.elementLocated({ id: "projects-button" }),
-          10000
-        );
-
-        if (projectsButton) {
-          await projectsButton.click();
-          await driver.wait(until.elementLocated({ id: "project-0" }), 5000);
-          const sampleProjectButton = await driver.findElement({
-            id: "project-0"
-          });
-
-          setTimeout(() => {}, 10000);
-          await sampleProjectButton.click();
-        }
-
-        await driver.wait(
           until.elementLocated({ id: "project-dashboard" }),
           15000
         );
