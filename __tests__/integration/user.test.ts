@@ -11,7 +11,7 @@ describe("User Tests", () => {
       data: {
         id: "1",
         displayName: "test",
-        username: "test",
+        username: "test5555",
         bio: "test",
         location: "test",
         userType: "Client",
