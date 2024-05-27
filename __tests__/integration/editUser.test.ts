@@ -19,7 +19,6 @@ describe("Edit User Tests", () => {
   });
 
   afterAll(async () => {
-    await prisma.users.deleteMany();
     await prisma.$disconnect;
     setTimeout(() => {}, 5000);
   });
