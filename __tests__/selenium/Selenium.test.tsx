@@ -471,6 +471,7 @@ describe("Selenium Automated Test", () => {
   describe("Kanban Automated Test", () => {
     describe("Developer Login", () => {
       it("logs out client account", async () => {
+        await driver.get(rootUrl);
         await driver.wait(
           until.elementLocated({ id: "account-button" }),
           10000
@@ -590,19 +591,10 @@ describe("Selenium Automated Test", () => {
 
         it("cancels task creation when close button is clicked", async () => {
           await driver.wait(
-            until.elementLocated({ id: "backlog-add-task-button" }),
-            10000
-          );
-          const addTaskButton = await driver.findElement({
-            id: "backlog-add-task-button"
-          });
-
-          await addTaskButton.click();
-
-          await driver.wait(
-            until.elementLocated({ id: "backlog-add-task-textarea" }),
+            until.elementLocated({ id: "character-limit-exceeded" }),
             5000
           );
+
           const closeButton = await driver.findElement({
             id: "backlog-add-task-close-button"
           });
