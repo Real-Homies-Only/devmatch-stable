@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import admin from "firebase-admin";
-import serviceAccount from "../firebase-admin.json" with { type: "json" };
+import serviceAccount from "../firebase-admin.json" assert { type: "json" };
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
